@@ -96,7 +96,7 @@
                 @Html.DisplayFor(modelItem => item.Subtitle)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Authors)
+                @string.Join(", ", item.Authors)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Publisher)
@@ -117,7 +117,7 @@
                 @Html.DisplayFor(modelItem => item.PageCount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GoogleBooksCategories)
+                @string.Join(", ", item.GoogleBooksCategories)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Thumbnail)

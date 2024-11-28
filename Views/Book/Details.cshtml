@@ -39,7 +39,7 @@
             @Html.DisplayNameFor(model => model.Authors)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Authors)
+            @string.Join(", ", Model.Authors)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Publisher)
@@ -81,7 +81,7 @@
             @Html.DisplayNameFor(model => model.GoogleBooksCategories)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GoogleBooksCategories)
+            @string.Join(", ", Model.GoogleBooksCategories)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Thumbnail)

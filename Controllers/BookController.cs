@@ -38,6 +38,25 @@ public class BookController : Controller
         return View(book);
     }
 
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Id,GoogleBooksId,Title,Subtitle,Authors,Publisher,PublishedDate,Description,ISBN10,ISBN13,PageCount,GoogleBooksCategories,Thumbnail,SmallThumbnail,SmallImage,MediumImage,LargeImage,ExtraLargeImage,GoogleBooksLink,CustomCategories")]Book book)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Add(book);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(book);
+    }
+
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -56,7 +75,7 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Book book)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,GoogleBooksId,Title,Subtitle,Authors,Publisher,PublishedDate,Description,ISBN10,ISBN13,PageCount,GoogleBooksCategories,Thumbnail,SmallThumbnail,SmallImage,MediumImage,LargeImage,ExtraLargeImage,GoogleBooksLink,CustomCategories")]Book book)
     {
         if (id != book.Id)
         {

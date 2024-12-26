@@ -93,7 +93,7 @@ public class AccountController : Controller
 
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Something went wrong. Try again later.");
+                ModelState.AddModelError(string.Empty, "Something went wrong.");
                 return View(model);
             }
             else
@@ -105,9 +105,53 @@ public class AccountController : Controller
         return View(model);
     }
 
-    public IActionResult ChangePassword()
+    public IActionResult ChangePassword(string username)
     {
-        return View();
+        if (string.IsNullOrEmpty(username))
+        {
+            return RedirectToAction("VerifyEmail", "Account");
+        }
+
+        return View(new ChangePasswordViewModel { Email = username });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var user = await userManager.FindByNameAsync(model.Email);
+
+            if (user != null)
+            {
+                var result = await userManager.RemovePasswordAsync(user);
+                
+                if (result.Succeeded)
+                {
+                    result = await userManager.AddPasswordAsync(user, model.NewPassword);
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    return View(model);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Email not found.");
+                return View(model);
+            }
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Something went wrong. Try again later.");
+            return View(model);
+        }
     }
 
     public async Task<IActionResult> Logout()

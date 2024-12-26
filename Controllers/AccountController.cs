@@ -13,4 +13,9 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    public IActionResult VerifyEmail()
+    {
+        return View();
+    }
 }

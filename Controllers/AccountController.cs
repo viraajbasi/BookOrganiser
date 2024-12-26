@@ -84,6 +84,27 @@ public class AccountController : Controller
         return View();
     }
 
+    [HttpPost]
+    public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var user = await userManager.FindByNameAsync(model.Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Something went wrong. Try again later.");
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("ChangePassword", "Account", new { username = user.UserName });
+            }
+        }
+
+        return View(model);
+    }
+
     public IActionResult ChangePassword()
     {
         return View();

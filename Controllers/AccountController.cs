@@ -63,7 +63,7 @@ public class AccountController : Controller
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(Login));
+                return RedirectToAction("Login", "Account");
             }
             else
             {
@@ -87,5 +87,11 @@ public class AccountController : Controller
     public IActionResult ChangePassword()
     {
         return View();
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Book");
     }
 }

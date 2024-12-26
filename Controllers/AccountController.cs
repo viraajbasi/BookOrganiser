@@ -18,4 +18,9 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    public IActionResult ChangePassword()
+    {
+        return View();
+    }
 }

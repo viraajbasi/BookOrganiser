@@ -8,4 +8,9 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    public IActionResult Register()
+    {
+        return View();
+    }
 }

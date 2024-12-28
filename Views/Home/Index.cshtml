@@ -1,0 +1,156 @@
+@model IEnumerable<BookOrganiser.Models.Book>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-action="AddBook" method="post">
+    <label for="isbn">Book ISBN:</label>
+    <input type="text" id="isbn" name="isbn" required />
+    <button type="submit">Add Book</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GoogleBooksID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subtitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Authors)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PublishedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISBN10)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISBN13)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PageCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoogleBooksCategories)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Thumbnail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SmallThumbnail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SmallImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediumImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LargeImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExtraLargeImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoogleBooksLink)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomCategories)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoogleBooksID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subtitle)
+            </td>
+            <td>
+                @string.Join(", ", item.Authors)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ISBN10)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ISBN13)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PageCount)
+            </td>
+            <td>
+                @string.Join(", ", item.GoogleBooksCategories)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Thumbnail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SmallThumbnail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SmallImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MediumImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LargeImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExtraLargeImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoogleBooksLink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomCategories)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>

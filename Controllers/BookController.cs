@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
 using BookOrganiser.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookOrganiser.Controllers;
 
+[Authorize]
 public class BookController : Controller
 {
     private readonly AppDbContext _context;

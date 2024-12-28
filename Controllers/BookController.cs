@@ -18,11 +18,6 @@ public class BookController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
-    {
-        return View(await _context.Books.ToListAsync());
-    }
-
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -53,7 +48,7 @@ public class BookController : Controller
         {
             _context.Add(book);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         return View(book);
@@ -103,7 +98,7 @@ public class BookController : Controller
                 }
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         return View(book);
@@ -137,7 +132,7 @@ public class BookController : Controller
         }
 
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpPost]
@@ -153,7 +148,7 @@ public class BookController : Controller
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Index", "Home");
     }
 
     private static async Task<List<Volume>> SearchByISBN(string isbn)

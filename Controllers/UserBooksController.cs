@@ -21,18 +21,41 @@ public class UserBooksController : Controller
     public async Task<IActionResult> AddBookToUser(string bookID)
     {
         string userName = User.Identity.Name;
-        List<string> bookList = [bookID];
-        
-        UserBooks userBooks = new()
-        {
-            UserName = userName,
-            BookIds = bookList,
-        };
+        bool doesUserHaveEntry = !_context.UserBooks.Any(e => e.UserName == userName);
 
-        if (ModelState.IsValid)
+        if (doesUserHaveEntry)
         {
-            _context.Add(userBooks);
-            await _context.SaveChangesAsync();
+            List<string> bookList = [bookID];
+            UserBooks userBooks = new()
+            {
+                UserName = userName,
+                BookIds = bookList,
+            };
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(userBooks);
+                await _context.SaveChangesAsync();
+            }
+        }
+        else
+        {
+            UserBooks entry = _context.UserBooks.First(e => e.UserName == userName)!;
+
+            if (entry.BookIds.Contains(bookID))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                entry.BookIds.Add(bookID);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(entry);
+                await _context.SaveChangesAsync();
+            }
         }
         
         return RedirectToAction("Index", "Home");

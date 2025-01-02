@@ -143,13 +143,16 @@ public class BookController : Controller
 
         var bookResponse = GoogleBooksToModel(results[0]);
         
-        if (results.Count > 0 && ModelState.IsValid)
+        if (results.Count > 0 && ModelState.IsValid && IsUniqueBook(bookResponse))
         {
             _context.Add(bookResponse);
             await _context.SaveChangesAsync();
+
+            return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookResponse.Id});
         }
 
-        return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookResponse.Id});
+        var bookID = _context.Books.First(e => e.GoogleBooksID == bookResponse.GoogleBooksID).Id;
+        return RedirectToAction("AddBookToUser", "UserBooks", new { bookID });
     }
 
     private static async Task<List<Volume>> SearchByISBN(string isbn)
@@ -212,5 +215,10 @@ public class BookController : Controller
     private bool BookExists(int id)
     {
         return _context.Books.Any(e => e.Id == id);
+    }
+
+    private bool IsUniqueBook(Book book)
+    {
+        return !_context.Books.Any(e => e.GoogleBooksID == book.GoogleBooksID);
     }
 }

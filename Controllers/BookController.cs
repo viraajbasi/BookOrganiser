@@ -136,6 +136,7 @@ public class BookController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddBook(string isbn)
     {
         List<Volume> results = await SearchByISBN(isbn);
@@ -148,7 +149,7 @@ public class BookController : Controller
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookResponse.Id});
     }
 
     private static async Task<List<Volume>> SearchByISBN(string isbn)

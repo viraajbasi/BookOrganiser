@@ -21,9 +21,9 @@ public class UserBooksController : Controller
     public async Task<IActionResult> AddBookToUser(string bookID)
     {
         string userName = User.Identity.Name;
-        bool doesUserHaveEntry = !_context.UserBooks.Any(e => e.UserName == userName);
+        bool doesUserHaveEntry = _context.UserBooks.Any(e => e.UserName == userName);
 
-        if (doesUserHaveEntry)
+        if (!doesUserHaveEntry)
         {
             List<string> bookList = [bookID];
             UserBooks userBooks = new()

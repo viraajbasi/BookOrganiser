@@ -7,13 +7,13 @@ namespace BookOrganiser.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly SignInManager<User> signInManager;
-    private readonly UserManager<User> userManager;
+    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
 
     public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
     {
-        this.signInManager = signInManager;
-        this.userManager = userManager;
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public IActionResult Login()
@@ -26,7 +26,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
             if (result.Succeeded)
             {
@@ -59,7 +59,7 @@ public class AccountController : Controller
                 UserName = model.Email,
             };
 
-            var result = await userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
@@ -89,7 +89,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Email);
 
             if (user == null)
             {
@@ -120,15 +120,15 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Email);
 
             if (user != null)
             {
-                var result = await userManager.RemovePasswordAsync(user);
+                var result = await _userManager.RemovePasswordAsync(user);
                 
                 if (result.Succeeded)
                 {
-                    result = await userManager.AddPasswordAsync(user, model.NewPassword);
+                    result = await _userManager.AddPasswordAsync(user, model.NewPassword);
                     return RedirectToAction("Login", "Account");
                 }
                 else
@@ -156,7 +156,7 @@ public class AccountController : Controller
 
     public async Task<IActionResult> Logout()
     {
-        await signInManager.SignOutAsync();
+        await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
 }

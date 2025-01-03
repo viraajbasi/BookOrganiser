@@ -20,15 +20,14 @@ public class UserBooksController : Controller
 
     public async Task<IActionResult> AddBookToUser(string bookID)
     {
-        string userName = User.Identity.Name;
-        bool doesUserHaveEntry = _context.UserBooks.Any(e => e.UserName == userName);
+        bool doesUserHaveEntry = _context.UserBooks.Any(e => e.UserName == User.Identity.Name);
 
         if (!doesUserHaveEntry)
         {
             List<string> bookList = [bookID];
             UserBooks userBooks = new()
             {
-                UserName = userName,
+                UserName = User.Identity.Name,
                 BookIds = bookList,
             };
 
@@ -40,7 +39,7 @@ public class UserBooksController : Controller
         }
         else
         {
-            UserBooks entry = _context.UserBooks.First(e => e.UserName == userName)!;
+            UserBooks entry = _context.UserBooks.First(e => e.UserName == User.Identity.Name)!;
 
             if (entry.BookIds.Contains(bookID))
             {

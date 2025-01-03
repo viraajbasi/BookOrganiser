@@ -21,7 +21,16 @@ public class HomeController : Controller
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Books.ToListAsync());
+        var strUserBooks = _context.UserBooks.FirstOrDefault(e => e.UserName == User.Identity.Name);
+
+        if (strUserBooks == null)
+        {
+            return View(new List<Book>());
+        }
+
+        var intBookIDs = strUserBooks.BookIds.Select(e => int.Parse(e)).ToList();
+        var userBooks = _context.Books.AsEnumerable().Where(b => intBookIDs.Contains(b.Id)).ToList();
+        return View(userBooks);
     }
 
     public IActionResult Privacy()

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookOrganiser.Data;
 using Microsoft.AspNetCore.Identity;
 using BookOrganiser.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganiser.Controllers;
 
@@ -39,16 +40,14 @@ public class UserBooksController : Controller
         }
         else
         {
-            UserBooks entry = _context.UserBooks.First(e => e.UserName == User.Identity.Name)!;
+            UserBooks entry = await _context.UserBooks.FirstAsync(e => e.UserName == User.Identity.Name);
 
             if (entry.BookIds.Contains(bookID))
             {
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                entry.BookIds.Add(bookID);
-            }
+
+            entry.BookIds.Add(bookID);
 
             if (ModelState.IsValid)
             {

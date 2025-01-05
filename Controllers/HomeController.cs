@@ -21,7 +21,7 @@ public class HomeController : Controller
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        var strUserBooks = _context.UserBooks.FirstOrDefault(e => e.UserName == User.Identity.Name);
+        var strUserBooks = await _context.UserBooks.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
 
         if (strUserBooks == null)
         {
@@ -30,6 +30,7 @@ public class HomeController : Controller
 
         var intBookIDs = strUserBooks.BookIds.Select(e => int.Parse(e)).ToList();
         var userBooks = _context.Books.AsEnumerable().Where(b => intBookIDs.Contains(b.Id)).ToList();
+        
         return View(userBooks);
     }
 

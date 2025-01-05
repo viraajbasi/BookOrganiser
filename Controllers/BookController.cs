@@ -150,9 +150,9 @@ public class BookController : Controller
 
             return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookResponse.Id});
         }
-
-        var bookID = _context.Books.First(e => e.GoogleBooksID == bookResponse.GoogleBooksID).Id;
-        return RedirectToAction("AddBookToUser", "UserBooks", new { bookID });
+        
+        var bookInDb = await _context.Books.FirstAsync(e => e.GoogleBooksID == bookResponse.GoogleBooksID);
+        return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookInDb.Id });
     }
 
     private static async Task<List<Volume>> SearchByISBN(string isbn)

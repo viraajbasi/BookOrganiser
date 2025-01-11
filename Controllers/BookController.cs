@@ -5,6 +5,7 @@ using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
 using BookOrganiser.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookOrganiser.Controllers;
 
@@ -12,10 +13,12 @@ namespace BookOrganiser.Controllers;
 public class BookController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly UserManager<User> _userManager;
 
-    public BookController(AppDbContext context)
+    public BookController(AppDbContext context, UserManager<User> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Details(int? id)
@@ -134,7 +137,7 @@ public class BookController : Controller
 
         foreach (var result in results)
         {
-            bookResponse.Add(GoogleBooksToModel(result));
+            bookResponse.Add(await GoogleBooksToModel(result));
         }
 
         return View(bookResponse);
@@ -146,18 +149,17 @@ public class BookController : Controller
     {
         List<Volume> results = await SearchByISBN(isbn);
 
-        var bookResponse = GoogleBooksToModel(results[0]);
+        var bookResponse = await GoogleBooksToModel(results[0]);
         
-        if (results.Count > 0 && ModelState.IsValid && IsUniqueBook(bookResponse))
+        if (results.Count > 0 && ModelState.IsValid)
         {
             _context.Add(bookResponse);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookResponse.Id});
+            return RedirectToAction("Index", "Home");
         }
-        
-        var bookInDb = await _context.Books.FirstAsync(e => e.GoogleBooksID == bookResponse.GoogleBooksID);
-        return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookInDb.Id });
+
+        return NotFound();
     }
     
     private static async Task<List<Volume>> SearchByTitle(string title)
@@ -196,10 +198,11 @@ public class BookController : Controller
         return [];
     }
 
-    private Book GoogleBooksToModel(Volume gbook)
+    private async Task<Book> GoogleBooksToModel(Volume gbook)
     {
         string isbn10 = string.Empty;
         string isbn13 = string.Empty;
+        User user = await _userManager.GetUserAsync(User);
 
         foreach (var industryIdentifier in gbook.VolumeInfo.IndustryIdentifiers)
         {
@@ -215,6 +218,8 @@ public class BookController : Controller
 
         return new Book()
         {
+            UserId = user.Id,
+            User = user,
             GoogleBooksID = gbook.Id ?? string.Empty,
             Title = gbook.VolumeInfo.Title ?? string.Empty,
             Subtitle = gbook.VolumeInfo.Subtitle ?? string.Empty,
@@ -238,10 +243,5 @@ public class BookController : Controller
     private bool BookExists(int id)
     {
         return _context.Books.Any(e => e.Id == id);
-    }
-
-    private bool IsUniqueBook(Book book)
-    {
-        return !_context.Books.Any(e => e.GoogleBooksID == book.GoogleBooksID);
     }
 }

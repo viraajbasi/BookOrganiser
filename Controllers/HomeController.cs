@@ -4,32 +4,26 @@ using BookOrganiser.Models;
 using BookOrganiser.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookOrganiser.Controllers;
 
 public class HomeController : Controller
 {
     private readonly AppDbContext _context;
-    private readonly ILogger<HomeController> _logger;
+    private readonly UserManager<User> _userManager;
 
-    public HomeController(AppDbContext context, ILogger<HomeController> logger)
+    public HomeController(AppDbContext context, ILogger<HomeController> logger, UserManager<User> userManager)
     {
         _context = context;
-        _logger = logger;
+        _userManager = userManager;
     }
 
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        var strUserBooks = await _context.UserBooks.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
-
-        if (strUserBooks == null)
-        {
-            return View(new List<Book>());
-        }
-
-        var intBookIDs = strUserBooks.BookIds.Select(e => int.Parse(e)).ToList();
-        var userBooks = _context.Books.AsEnumerable().Where(b => intBookIDs.Contains(b.Id)).ToList();
+        var user = await _userManager.GetUserAsync(User);
+        var userBooks = _context.Books.Where(e => e.UserId == user.Id).ToList();
         
         return View(userBooks);
     }

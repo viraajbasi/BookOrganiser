@@ -8,7 +8,6 @@ public class AppDbContext: IdentityDbContext<User>
 {
     public DbSet<Book> Books { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<UserBooks> UserBooks { get; set; }
 
     public AppDbContext(DbContextOptions options): base(options) {   }
 

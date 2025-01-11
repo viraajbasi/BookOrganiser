@@ -10,7 +10,7 @@
     <div class="account-box">
         <h2 class="text-center mb-4">Verify Email</h2>
         <form asp-action="VerifyEmail" method="post">
-            <div asp-asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="Email" class="form-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -21,9 +21,6 @@
                 <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Return Home</a>
             </div>
         </form>
-        <div class="text-danger">
-            @Html.ValidationSummary()
-        </div>
     </div>
 </div>
 

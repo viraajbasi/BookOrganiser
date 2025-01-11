@@ -5,4 +5,5 @@ namespace BookOrganiser.Models;
 public class User : IdentityUser
 {
     public string FullName { get; set; } = string.Empty;
+    public List<Book> Books { get; set; } = new List<Book>();
 }

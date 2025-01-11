@@ -1,7 +1,7 @@
 @model BookOrganiser.Models.Book
 
 @{
-    ViewData["Title"] = "Exit";
+    ViewData["Title"] = "Edit";
 }
 
 <!DOCTYPE html>
@@ -15,100 +15,195 @@
 
 <h4>Book</h4>
 <hr />
+<div>
+        <dl class="row">
+        @if (Model.Title != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Title
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+        }
+        @if (Model.Subtitle != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Subtitle
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Subtitle)
+            </dd>
+        }
+        @if (Model.Authors.Any())
+        { 
+            <dt class = "col-sm-2">
+                Author(s)
+            </dt>
+            <dd class = "col-sm-10">
+                @string.Join(", ", Model.Authors)
+            </dd>
+        }
+        @if (Model.Publisher != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Publisher
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Publisher)
+            </dd>
+        }
+        @if (Model.PublishedDate != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Year Published
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.PublishedDate)
+            </dd>
+        }
+        @if (Model.Description != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Description
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        }
+        @if (Model.ISBN10 != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                ISBN-10
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ISBN10)
+            </dd>
+        }
+        @if (Model.ISBN13 != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                ISBN-13
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ISBN13)
+            </dd>
+        }
+        <dt class = "col-sm-2">
+            Page Count
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PageCount)
+        </dd>
+        @if (Model.GoogleBooksCategories.Any())
+        {
+            <dt class = "col-sm-2">
+                Categories
+            </dt>
+            <dd class = "col-sm-10">
+                @string.Join(", ", Model.GoogleBooksCategories)
+            </dd>
+        }
+        @if (Model.Thumbnail != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Thumbnail
+            </dt>
+            <dd class = "col-sm-10">
+                <img src="@Model.Thumbnail" />
+            </dd>
+        }
+        @if (Model.SmallThumbnail != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Thumbnail (Small)
+            </dt>
+            <dd class = "col-sm-10">
+                <img src="@Model.SmallThumbnail" />
+            </dd>
+        }
+        @if (Model.SmallImage != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Cover (Small)
+            </dt>
+            <dd class = "col-sm-10">
+                <img src="@Model.SmallImage" />
+            </dd>
+        }
+        @if (Model.MediumImage != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Image (Medium)
+            </dt>
+            <dd class = "col-sm-10">
+                <img src="@Model.MediumImage" />
+            </dd>
+        }
+        @if (Model.LargeImage != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Image (Large)
+            </dt>
+            <dd class = "col-sm-10">
+                <img src="@Model.LargeImage" />
+            </dd>
+        }
+        @if (Model.ExtraLargeImage != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Image (Extra Large)
+            </dt>
+            <dd class = "col-sm-10">
+                <img src="@Model.ExtraLargeImage" />
+            </dd>
+        }
+        @if (Model.GoogleBooksLink != string.Empty)
+        {
+            <dt class = "col-sm-2">
+                Google Books Link
+            </dt>
+            <dd class = "col-sm-10">
+                <a href="@Model.GoogleBooksLink"></a>
+            </dd>
+        }
+        @if (Model.CustomCategories.Any())
+        {
+            <dt class = "col-sm-2">
+                Custom Categories
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.CustomCategories)
+            </dd>
+        }
+    </dl>
+</div>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="GoogleBooksID" class="control-label"></label>
-                <input asp-for="GoogleBooksID" class="form-control" />
-                <span asp-validation-for="GoogleBooksID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Subtitle" class="control-label"></label>
-                <input asp-for="Subtitle" class="form-control" />
-                <span asp-validation-for="Subtitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Authors" class="control-label"></label>
-                <input asp-for="Authors" class="form-control" />
-                <span asp-validation-for="Authors" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Publisher" class="control-label"></label>
-                <input asp-for="Publisher" class="form-control" />
-                <span asp-validation-for="Publisher" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PublishedDate" class="control-label"></label>
-                <input asp-for="PublishedDate" class="form-control" />
-                <span asp-validation-for="PublishedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ISBN10" class="control-label"></label>
-                <input asp-for="ISBN10" class="form-control" />
-                <span asp-validation-for="ISBN10" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ISBN13" class="control-label"></label>
-                <input asp-for="ISBN13" class="form-control" />
-                <span asp-validation-for="ISBN13" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="GoogleBooksID" />
+            <input type="hidden" asp-for="Title" />
+            <input type="hidden" asp-for="Subtitle" />
+            <input type="hidden" asp-for="Authors" />
+            <input type="hidden" asp-for="Publisher" />
+            <input type="hidden" asp-for="PublishedDate" />
+            <input type="hidden" asp-for="Description" />
+            <input type="hidden" asp-for="ISBN10" />
+            <input type="hidden" asp-for="ISBN13" />
+            <input type="hidden" asp-for="GoogleBooksCategories" />
+            <input type="hidden" asp-for="Thumbnail" />
+            <input type="hidden" asp-for="SmallThumbnail" />
+            <input type="hidden" asp-for="SmallImage" />
+            <input type="hidden" asp-for="MediumImage" />
+            <input type="hidden" asp-for="LargeImage" />
+            <input type="hidden" asp-for="ExtraLargeImage" />
+            <input type="hidden" asp-for="GoogleBooksLink" />
             <div class="form-group">
                 <label asp-for="PageCount" class="control-label"></label>
                 <input asp-for="PageCount" class="form-control" />
                 <span asp-validation-for="PageCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GoogleBooksCategories" class="control-label"></label>
-                <input asp-for="GoogleBooksCategories" class="form-control" />
-                <span asp-validation-for="GoogleBooksCategories" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Thumbnail" class="control-label"></label>
-                <input asp-for="Thumbnail" class="form-control" />
-                <span asp-validation-for="Thumbnail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SmallThumbnail" class="control-label"></label>
-                <input asp-for="SmallThumbnail" class="form-control" />
-                <span asp-validation-for="SmallThumbnail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SmallImage" class="control-label"></label>
-                <input asp-for="SmallImage" class="form-control" />
-                <span asp-validation-for="SmallImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MediumImage" class="control-label"></label>
-                <input asp-for="MediumImage" class="form-control" />
-                <span asp-validation-for="MediumImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LargeImage" class="control-label"></label>
-                <input asp-for="LargeImage" class="form-control" />
-                <span asp-validation-for="LargeImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExtraLargeImage" class="control-label"></label>
-                <input asp-for="ExtraLargeImage" class="form-control" />
-                <span asp-validation-for="ExtraLargeImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GoogleBooksLink" class="control-label"></label>
-                <input asp-for="GoogleBooksLink" class="form-control" />
-                <span asp-validation-for="GoogleBooksLink" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CustomCategories" class="control-label"></label>

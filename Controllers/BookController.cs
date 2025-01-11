@@ -53,7 +53,7 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,GoogleBooksId,Title,Subtitle,Authors,Publisher,PublishedDate,Description,ISBN10,ISBN13,PageCount,GoogleBooksCategories,Thumbnail,SmallThumbnail,SmallImage,MediumImage,LargeImage,ExtraLargeImage,GoogleBooksLink,CustomCategories")]Book book)
+    public async Task<IActionResult> Edit(int id, Book book)
     {
         if (id != book.Id)
         {

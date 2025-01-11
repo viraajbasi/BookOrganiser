@@ -135,9 +135,33 @@ public class BookController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    public IActionResult Find()
+    {
+        return View();
+    }
+
+    public async Task<IActionResult> AddBookTitle(string title)
+    {
+        var results = await SearchByTitle(title);
+
+        if (results.Count == 0)
+        {
+            return View(new List<Book>());
+        }
+
+        List<Book> bookResponse = new();
+
+        foreach (var result in results)
+        {
+            bookResponse.Add(GoogleBooksToModel(result));
+        }
+
+        return View(bookResponse);
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddBook(string isbn)
+    public async Task<IActionResult> AddBookISBN(string isbn)
     {
         List<Volume> results = await SearchByISBN(isbn);
 
@@ -153,6 +177,24 @@ public class BookController : Controller
         
         var bookInDb = await _context.Books.FirstAsync(e => e.GoogleBooksID == bookResponse.GoogleBooksID);
         return RedirectToAction("AddBookToUser", "UserBooks", new { bookID = bookInDb.Id });
+    }
+    
+    private static async Task<List<Volume>> SearchByTitle(string title)
+    {
+        var service = new BooksService();
+
+        var request = service.Volumes.List($"{title}");
+        request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
+        request.Fields = "totalItems,items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
+
+        var response = await request.ExecuteAsync();
+
+        if (response.Items != null)
+        {
+            return response.Items.ToList();
+        }
+
+        return [];
     }
 
     private static async Task<List<Volume>> SearchByISBN(string isbn)
@@ -173,7 +215,7 @@ public class BookController : Controller
         return [];
     }
 
-    private static Book GoogleBooksToModel(Volume gbook)
+    private Book GoogleBooksToModel(Volume gbook)
     {
         string isbn10 = string.Empty;
         string isbn13 = string.Empty;

@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        <form asp-controller="Book" asp-action="AddBookISBN" method="post">
+            <label for="isbn">Book ISBN:</label>
+            <input type="text" id="isbn" name="isbn" required />
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+    <div>
+    <form asp-controller="Book" asp-action="AddBookTitle" method="post">
+        <label for="title">Book Title:</label>
+        <input type="text" id="title" name="title" required />
+        <button type="submit">Add Book</button>
+    </form>
+</body>
+</html>

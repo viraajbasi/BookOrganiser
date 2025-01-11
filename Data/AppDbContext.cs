@@ -17,7 +17,6 @@ public class AppDbContext: IdentityDbContext<User>
         modelBuilder.Entity<User>()
             .HasMany(e => e.Books)
             .WithOne(e=> e.User)
-            .HasForeignKey(e => e.UserId)
             .IsRequired();
         
         base.OnModelCreating(modelBuilder);

@@ -133,7 +133,7 @@ public class BookController : Controller
             return View(new List<Book>());
         }
 
-        List<Book> bookResponse = new();
+        var bookResponse = new List<Book>();
 
         foreach (var result in results)
         {
@@ -147,8 +147,7 @@ public class BookController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddBookISBN(string isbn)
     {
-        List<Volume> results = await SearchByISBN(isbn);
-
+        var results = await SearchByISBN(isbn);
         var bookResponse = await GoogleBooksToModel(results[0]);
         
         if (results.Count > 0 && ModelState.IsValid)
@@ -183,7 +182,6 @@ public class BookController : Controller
     private static async Task<List<Volume>> SearchByISBN(string isbn)
     {
         var service = new BooksService();
-
         var request = service.Volumes.List($"isbn:{isbn}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
         request.Fields = "totalItems,items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
@@ -200,9 +198,9 @@ public class BookController : Controller
 
     private async Task<Book> GoogleBooksToModel(Volume gbook)
     {
-        string isbn10 = string.Empty;
-        string isbn13 = string.Empty;
-        User user = await _userManager.GetUserAsync(User);
+        var isbn10 = string.Empty;
+        var isbn13 = string.Empty;
+        var user = await _userManager.GetUserAsync(User);
 
         foreach (var industryIdentifier in gbook.VolumeInfo.IndustryIdentifiers)
         {

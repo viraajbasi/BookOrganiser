@@ -39,6 +39,9 @@
                 <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Return Home</a>
             </div>
         </form>
+        <div class="text-danger">
+            @Html.ValidationSummary()
+        </div>
     </div>
 </div>
 

@@ -128,7 +128,7 @@ public class AccountController : Controller
                 
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddPasswordAsync(user, model.NewPassword);
+                    await _userManager.AddPasswordAsync(user, model.NewPassword);
                     return RedirectToAction("Login", "Account");
                 }
                 else

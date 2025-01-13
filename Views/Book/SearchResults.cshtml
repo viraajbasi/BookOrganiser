@@ -33,7 +33,7 @@
                 Thumbnail
             </th>
             <th>
-                Options
+                Actions
             </th>
         </tr>
     </thead>
@@ -110,6 +110,13 @@
                 Not Found.
             </td>
         }
+        <td>
+            <form asp-controller="Book" asp-action="AddBook" method="post">
+                <input type="hidden" name="isISBN" value="false" />
+                <input type="hidden" name="identifier" value="@item.GoogleBooksID" />
+                <button type="submit">Add Book</button>
+            </form>
+        </td>
     </tr>
 }
     </tbody>

@@ -183,7 +183,7 @@ public class BookController : Controller
         }
         else
         {
-            var request = service.Volumes.Get("query");
+            var request = service.Volumes.Get($"{query}");
             request.Fields = "id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink)";
             
             var response = await request.ExecuteAsync();

@@ -148,7 +148,7 @@ public class BookController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddBookISBN(string isbn)
     {
-        var results = await SearchByISBN(isbn);
+        var results = await PerformSearchQuery(isbn, true);
         var bookResponse = await GoogleBooksToModel(results[0]);
         
         if (results.Count > 0 && ModelState.IsValid)
@@ -160,6 +160,49 @@ public class BookController : Controller
         }
 
         return NotFound();
+    }
+    
+    private static async Task<List<Volume>> PerformSearchQuery(string query, bool IsISBN)
+    {
+        var service = new BooksService();
+        var results = new List<Volume>();
+        
+        if (IsISBN)
+        {
+            var request = service.Volumes.List($"isbn:{query}");
+            request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
+            request.Fields = "items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
+            request.MaxResults = 1;
+
+            var response = await request.ExecuteAsync();
+
+            if (response.Items != null)
+            {
+                results = response.Items.ToList();
+            }
+            else
+            {
+                results = [];
+            }
+        }
+        else
+        {
+            var request = service.Volumes.Get("query");
+            request.Fields = "id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink)";
+            
+            var response = await request.ExecuteAsync();
+
+            if (response != null)
+            {
+                results.Add(response);
+            }
+            else
+            {
+                results = [];
+            }
+        }
+
+        return results;
     }
     
     private static async Task<List<Volume>> SearchByTitle(string title)
@@ -180,25 +223,7 @@ public class BookController : Controller
 
         return [];
     }
-
-    private static async Task<List<Volume>> SearchByISBN(string isbn)
-    {
-        var service = new BooksService();
-        var request = service.Volumes.List($"isbn:{isbn}");
-        request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-        request.Fields = "items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
-        request.MaxResults = 1;
-
-        var response = await request.ExecuteAsync();
-
-        if (response.Items != null)
-        {
-            return response.Items.ToList();
-        }
-
-        return [];
-    }
-
+    
     private async Task<Book> GoogleBooksToModel(Volume gbook)
     {
         var isbn10 = string.Empty;

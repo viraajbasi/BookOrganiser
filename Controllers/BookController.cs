@@ -218,24 +218,8 @@ public class BookController : Controller
     
     private async Task<Book> GoogleBooksToModel(Volume book)
     {
-        var isbn10 = string.Empty;
-        var isbn13 = string.Empty;
         var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
-
-        if (book.VolumeInfo.IndustryIdentifiers != null)
-        {
-            foreach (var industryIdentifier in book.VolumeInfo.IndustryIdentifiers)
-            {
-                if (industryIdentifier.Type == "ISBN_10")
-                {
-                    isbn10 = industryIdentifier.Identifier;
-                }
-                else if (industryIdentifier.Type == "ISBN_13")
-                {
-                    isbn13 = industryIdentifier.Identifier;
-                }
-            }
-        }
+        var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier) ?? new Dictionary<string, string>();
 
         return new Book()
         {
@@ -248,16 +232,18 @@ public class BookController : Controller
             Publisher = book.VolumeInfo.Publisher ?? string.Empty,
             PublishedDate = book.VolumeInfo.PublishedDate ?? string.Empty,
             Description = book.VolumeInfo.Description ?? string.Empty,
-            ISBN10 = isbn10,
-            ISBN13 = isbn13,
+            ISBN10 = identifiers.TryGetValue("ISBN_10", out var isbn10) ? isbn10 : string.Empty,
+            ISBN13 = identifiers.TryGetValue("ISBN_13", out var isbn13) ? isbn13 : string.Empty,
+            ISSN = identifiers.TryGetValue("ISSN", out var issn) ? issn : string.Empty,
+            OtherIdentifier = identifiers.TryGetValue("OTHER", out var other) ? other : string.Empty,
             PageCount = book.VolumeInfo.PageCount ?? 0,
             GoogleBooksCategories = book.VolumeInfo.Categories ?? new List<string>(),
-            Thumbnail = book.VolumeInfo.ImageLinks.Thumbnail ?? string.Empty,
-            SmallThumbnail = book.VolumeInfo.ImageLinks.SmallThumbnail ?? string.Empty,
-            SmallImage = book.VolumeInfo.ImageLinks.Small ?? string.Empty,
-            MediumImage = book.VolumeInfo.ImageLinks.Medium ?? string.Empty,
-            LargeImage = book.VolumeInfo.ImageLinks.Large ?? string.Empty,
-            ExtraLargeImage = book.VolumeInfo.ImageLinks.ExtraLarge ?? string.Empty,
+            Thumbnail = book.VolumeInfo.ImageLinks?.Thumbnail ?? string.Empty,
+            SmallThumbnail = book.VolumeInfo.ImageLinks?.SmallThumbnail ?? string.Empty,
+            SmallImage = book.VolumeInfo.ImageLinks?.Small ?? string.Empty,
+            MediumImage = book.VolumeInfo.ImageLinks?.Medium ?? string.Empty,
+            LargeImage = book.VolumeInfo.ImageLinks?.Large ?? string.Empty,
+            ExtraLargeImage = book.VolumeInfo.ImageLinks?.ExtraLarge ?? string.Empty,
             GoogleBooksLink = book.VolumeInfo.InfoLink ?? string.Empty
         };
     }

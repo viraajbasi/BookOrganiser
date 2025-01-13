@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookOrganiser.ViewModels;
 
-public class RegisterViewModel()
+public class RegisterViewModel
 {
     [Required(ErrorMessage = "A name is required.")]
     public string Name { get; set; } = string.Empty;

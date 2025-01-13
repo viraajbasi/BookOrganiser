@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookOrganiser.ViewModels;
 
-public class ChangePasswordViewModel()
+public class ChangePasswordViewModel
 {
     [Required(ErrorMessage = "An email is required.")]
     [EmailAddress]

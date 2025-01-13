@@ -1,20 +1,10 @@
 @model IEnumerable<BookOrganiser.Models.Book>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Search Results";
 }
 
 <!DOCTYPE html>
-<script>
-    async function SendBookToController(item)
-    {
-        await fetch('/Book/AddBookToDB',
-            method: 'POST',
-            headers: { 'Content-Type', 'application/json' },
-            body: JSON.stringify(item),
-        );
-    }
-</script>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -25,40 +15,102 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Authors)
+                Authors
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PublishedDate)
+                Publisher
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Thumbnail)
+                Date Published
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Thumbnail
             </th>
             <th>
                 Options
             </th>
+        </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+    <tr>
+        @if (item.Title != string.Empty)
+        {
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
+        }
+        else
+        {
+            <td class="text-danger">
+                Not Found.
+            </td>
+        }
+        @if (item.Authors.Any())
+        {
             <td>
                 @string.Join(", ", item.Authors)
             </td>
+        }
+        else
+        {
+            <td class="text-danger">
+                Not Found.
+            </td>
+        }
+        @if (item.Publisher != string.Empty)
+        {
+            <td>@Html.DisplayFor(modelItem => item.Publisher)</td>
+        }
+        else
+        {
+            <td class="text-danger">
+                Not Found.
+            </td>
+        }
+        @if (item.PublishedDate != string.Empty)
+        {
             <td>
                 @Html.DisplayFor(modelItem => item.PublishedDate)
             </td>
-            <td>
-                <img src=@Html.DisplayFor(modelItem => item.Thumbnail) />
+        }
+        else
+        {
+            <td class="text-danger">
+                Not Found.
             </td>
+        }
+        @if (item.Description != string.Empty)
+        {
             <td>
-                <a asp-controller="Book" asp-action="AddBookToDB" asp-route-id="@item.Id">Add</a>
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
-        </tr>
+        }
+        else
+        {
+            <td class="text-danger">
+                Not Found.
+            </td>
+        }
+        @if (item.Thumbnail != string.Empty)
+        {
+            <td>
+                <img src=@Html.DisplayFor(modelItem => item.Thumbnail)/>
+            </td>
+        }
+        else
+        {
+            <td class="text-danger">
+                Not Found.
+            </td>
+        }
+    </tr>
 }
     </tbody>
 </table>

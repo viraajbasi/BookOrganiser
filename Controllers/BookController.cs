@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using BookOrganiser.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,9 @@ namespace BookOrganiser.Controllers;
 public class BookController : Controller
 {
     private readonly AppDbContext _context;
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<UserAccount> _userManager;
 
-    public BookController(AppDbContext context, UserManager<User> userManager)
+    public BookController(AppDbContext context, UserManager<UserAccount> userManager)
     {
         _context = context;
         _userManager = userManager;
@@ -167,10 +168,11 @@ public class BookController : Controller
 
         var request = service.Volumes.List($"{title}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-        request.Fields = "totalItems,items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
+        request.Fields = "items(id,volumeInfo(title,authors,publisher,publishedDate,description,industryIdentifiers,imageLinks(thumbnail)))";
+        request.MaxResults = 40;
 
         var response = await request.ExecuteAsync();
-
+        
         if (response.Items != null)
         {
             return response.Items.ToList();
@@ -184,7 +186,8 @@ public class BookController : Controller
         var service = new BooksService();
         var request = service.Volumes.List($"isbn:{isbn}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-        request.Fields = "totalItems,items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
+        request.Fields = "items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
+        request.MaxResults = 1;
 
         var response = await request.ExecuteAsync();
 
@@ -200,34 +203,38 @@ public class BookController : Controller
     {
         var isbn10 = string.Empty;
         var isbn13 = string.Empty;
-        var user = await _userManager.GetUserAsync(User);
+        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationException("User must be logged in.");
 
-        foreach (var industryIdentifier in gbook.VolumeInfo.IndustryIdentifiers)
+        if (gbook.VolumeInfo.IndustryIdentifiers != null)
         {
-            if (industryIdentifier.Type == "ISBN_10")
+            foreach (var industryIdentifier in gbook.VolumeInfo.IndustryIdentifiers)
             {
-                isbn10 = industryIdentifier.Identifier;
-            }
-            else if (industryIdentifier.Type == "ISBN_13")
-            {
-                isbn13 = industryIdentifier.Identifier;
+                if (industryIdentifier.Type == "ISBN_10")
+                {
+                    isbn10 = industryIdentifier.Identifier;
+                }
+                else if (industryIdentifier.Type == "ISBN_13")
+                {
+                    isbn13 = industryIdentifier.Identifier;
+                }
             }
         }
 
         return new Book()
         {
             UserId = user.Id,
-            User = user,
+            UserAccount = user,
             GoogleBooksID = gbook.Id ?? string.Empty,
             Title = gbook.VolumeInfo.Title ?? string.Empty,
             Subtitle = gbook.VolumeInfo.Subtitle ?? string.Empty,
-            Authors = gbook.VolumeInfo.Authors,
+            Authors = gbook.VolumeInfo.Authors ?? new List<string>(),
             Publisher = gbook.VolumeInfo.Publisher ?? string.Empty,
             PublishedDate = gbook.VolumeInfo.PublishedDate ?? string.Empty,
             Description = gbook.VolumeInfo.Description ?? string.Empty,
             ISBN10 = isbn10,
             ISBN13 = isbn13,
-            GoogleBooksCategories = gbook.VolumeInfo.Categories,
+            PageCount = gbook.VolumeInfo.PageCount ?? 0,
+            GoogleBooksCategories = gbook.VolumeInfo.Categories ?? new List<string>(),
             Thumbnail = gbook.VolumeInfo.ImageLinks.Thumbnail ?? string.Empty,
             SmallThumbnail = gbook.VolumeInfo.ImageLinks.SmallThumbnail ?? string.Empty,
             SmallImage = gbook.VolumeInfo.ImageLinks.Small ?? string.Empty,

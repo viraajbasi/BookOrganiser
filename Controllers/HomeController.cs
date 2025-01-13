@@ -11,9 +11,9 @@ namespace BookOrganiser.Controllers;
 public class HomeController : Controller
 {
     private readonly AppDbContext _context;
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<UserAccount> _userManager;
 
-    public HomeController(AppDbContext context, UserManager<User> userManager)
+    public HomeController(AppDbContext context, UserManager<UserAccount> userManager)
     {
         _context = context;
         _userManager = userManager;

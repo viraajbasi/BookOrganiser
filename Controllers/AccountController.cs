@@ -7,10 +7,10 @@ namespace BookOrganiser.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<UserAccount> _signInManager;
+    private readonly UserManager<UserAccount> _userManager;
 
-    public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+    public AccountController(SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager)
     {
         _signInManager = signInManager;
         _userManager = userManager;
@@ -52,14 +52,14 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            User user = new User
+            UserAccount userAccount = new UserAccount
             {
                 FullName = model.Name,
                 Email = model.Email,
                 UserName = model.Email,
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(userAccount, model.Password);
 
             if (result.Succeeded)
             {

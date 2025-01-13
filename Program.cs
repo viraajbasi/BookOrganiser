@@ -19,7 +19,7 @@ else
         options.UseNpgsql(builder.Configuration.GetConnectionString("ProdContext")));
 }
 
-builder.Services.AddIdentity<User, IdentityRole>(options => 
+builder.Services.AddIdentity<UserAccount, IdentityRole>(options => 
 {
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;

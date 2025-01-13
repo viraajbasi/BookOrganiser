@@ -125,7 +125,7 @@ public class BookController : Controller
         return View();
     }
 
-    public async Task<IActionResult> AddBookTitle(string title)
+    public async Task<IActionResult> SearchResults(string title)
     {
         var results = await SearchByTitle(title);
 

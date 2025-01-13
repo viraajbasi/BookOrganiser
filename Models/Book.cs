@@ -14,6 +14,8 @@ public class Book
     public string Description { get; set; } = string.Empty;
     public string ISBN10 { get; set; } = string.Empty;
     public string ISBN13 { get; set; } = string.Empty;
+    public string ISSN { get; set; } = string.Empty;
+    public string OtherIdentifier  { get; set; } = string.Empty;
     public int PageCount { get; set; }
     public IList<string> GoogleBooksCategories { get; set; } = new List<string>();
     public string Thumbnail { get; set; } = string.Empty;

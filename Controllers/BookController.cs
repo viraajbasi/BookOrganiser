@@ -1,10 +1,10 @@
-using System.Security.Authentication;
 using BookOrganiser.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
 using BookOrganiser.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -203,7 +203,7 @@ public class BookController : Controller
     {
         var isbn10 = string.Empty;
         var isbn13 = string.Empty;
-        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationException("User must be logged in.");
+        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
 
         if (gbook.VolumeInfo.IndustryIdentifiers != null)
         {

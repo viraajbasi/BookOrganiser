@@ -13,16 +13,16 @@
     <div>
         <form asp-controller="Book" asp-action="AddBook" method="post">
             <input type="hidden" name="isISBN" value="true" />
-            <label for="identifier">Book ISBN:</label>
-            <input type="text" id="identifier" name="identifier" required />
-            <button type="submit">Add Book</button>
+            <label class="form-label" for="identifier">Book ISBN:</label>
+            <input class="form-control" type="text" id="identifier" name="identifier" required />
+            <input type="submit" value="Add Book" class="btn btn-success w-100 p-2" />
         </form>
     </div>
     <div>
     <form asp-controller="Book" asp-action="SearchResults">
-        <label for="title">Book Title:</label>
-        <input type="text" id="title" name="title" required />
-        <button type="submit">Add Book</button>
+        <label class="form-label" for="title">Book Title:</label>
+        <input class="form-control" type="text" id="title" name="title" required />
+        <input type="submit" value="Add Book" class="btn btn-success w-100 p-2" />
     </form>
     </div>
 </body>

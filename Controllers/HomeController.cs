@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BookOrganiser.Models;
 using BookOrganiser.Data;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,7 +13,7 @@ public class HomeController : Controller
     private readonly AppDbContext _context;
     private readonly UserManager<User> _userManager;
 
-    public HomeController(AppDbContext context, ILogger<HomeController> logger, UserManager<User> userManager)
+    public HomeController(AppDbContext context, UserManager<User> userManager)
     {
         _context = context;
         _userManager = userManager;
@@ -22,7 +22,7 @@ public class HomeController : Controller
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        var user = await _userManager.GetUserAsync(User);
+        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
         var userBooks = _context.Books.Where(e => e.UserId == user.Id).ToList();
         
         return View(userBooks);

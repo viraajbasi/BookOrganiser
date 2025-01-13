@@ -192,6 +192,7 @@
             <input type="hidden" asp-for="Description" />
             <input type="hidden" asp-for="ISBN10" />
             <input type="hidden" asp-for="ISBN13" />
+            <input type="hidden" asp-for="PageCount" />
             <input type="hidden" asp-for="GoogleBooksCategories" />
             <input type="hidden" asp-for="Thumbnail" />
             <input type="hidden" asp-for="SmallThumbnail" />
@@ -200,11 +201,6 @@
             <input type="hidden" asp-for="LargeImage" />
             <input type="hidden" asp-for="ExtraLargeImage" />
             <input type="hidden" asp-for="GoogleBooksLink" />
-            <div class="form-group">
-                <label asp-for="PageCount" class="control-label"></label>
-                <input asp-for="PageCount" class="form-control" />
-                <span asp-validation-for="PageCount" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="CustomCategories" class="control-label"></label>
                 <input asp-for="CustomCategories" class="form-control" />

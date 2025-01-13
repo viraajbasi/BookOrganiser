@@ -11,9 +11,10 @@
 </head>
 <body>
     <div>
-        <form asp-controller="Book" asp-action="AddBookISBN" method="post">
-            <label for="isbn">Book ISBN:</label>
-            <input type="text" id="isbn" name="isbn" required />
+        <form asp-controller="Book" asp-action="AddBook" method="post">
+            <input type="hidden" name="isISBN" value="true" />
+            <label for="identifier">Book ISBN:</label>
+            <input type="text" id="identifier" name="identifier" required />
             <button type="submit">Add Book</button>
         </form>
     </div>

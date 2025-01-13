@@ -146,13 +146,14 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddBookISBN(string isbn)
+    public async Task<IActionResult> AddBook(string identifier, string isISBN)
     {
-        var results = await PerformSearchQuery(isbn, true);
-        var bookResponse = await GoogleBooksToModel(results[0]);
+        var queryType = Convert.ToBoolean(isISBN);
+        var result = await PerformSearchQuery(identifier, queryType);
         
-        if (results.Count > 0 && ModelState.IsValid)
+        if (result != null && ModelState.IsValid)
         {
+            var bookResponse = await GoogleBooksToModel(result);
             _context.Add(bookResponse);
             await _context.SaveChangesAsync();
 
@@ -162,12 +163,11 @@ public class BookController : Controller
         return NotFound();
     }
     
-    private static async Task<List<Volume>> PerformSearchQuery(string query, bool IsISBN)
+    private static async Task<Volume?> PerformSearchQuery(string query, bool isISBN)
     {
         var service = new BooksService();
-        var results = new List<Volume>();
         
-        if (IsISBN)
+        if (isISBN)
         {
             var request = service.Volumes.List($"isbn:{query}");
             request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
@@ -178,11 +178,7 @@ public class BookController : Controller
 
             if (response.Items != null)
             {
-                results = response.Items.ToList();
-            }
-            else
-            {
-                results = [];
+                return response.Items.ToList()[0];
             }
         }
         else
@@ -194,15 +190,11 @@ public class BookController : Controller
 
             if (response != null)
             {
-                results.Add(response);
-            }
-            else
-            {
-                results = [];
+                return response;
             }
         }
 
-        return results;
+        return null;
     }
     
     private static async Task<List<Volume>> SearchByTitle(string title)

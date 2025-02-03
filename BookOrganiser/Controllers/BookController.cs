@@ -39,56 +39,6 @@ public class BookController : Controller
         return View(book);
     }
 
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var book = await _context.Books.FindAsync(id);
-        if (book == null)
-        {
-            return NotFound();
-        }
-
-        return View(book);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Book book)
-    {
-        if (id != book.Id)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(book);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookExists(book.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        return View(book);
-    }
-
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -246,10 +196,5 @@ public class BookController : Controller
             ExtraLargeImage = book.VolumeInfo.ImageLinks?.ExtraLarge ?? string.Empty,
             GoogleBooksLink = book.VolumeInfo.InfoLink ?? string.Empty
         };
-    }
-
-    private bool BookExists(int id)
-    {
-        return _context.Books.Any(e => e.Id == id);
     }
 }

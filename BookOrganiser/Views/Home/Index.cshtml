@@ -24,34 +24,69 @@
             <th>
                 @Html.DisplayNameFor(model => model.PublishedDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Thumbnail)
-            </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Thumbnail)
+        </th>
             <th>
                 Options
             </th>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+    <tr>
+        @if (item.Title != string.Empty)
+        {
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
+        }
+        else
+        {
+            <td class="text-danger">
+                Title Not Found.
+            </td>
+        }
+        @if (item.Authors.Any())
+        {
             <td>
                 @string.Join(", ", item.Authors)
             </td>
+        }
+        else
+        {
+            <td class="text-danger">
+                No Authors Found.
+            </td>
+        }
+        @if (item.PublishedDate != string.Empty)
+        {
             <td>
                 @Html.DisplayFor(modelItem => item.PublishedDate)
             </td>
-            <td>
-                <img src=@Html.DisplayFor(modelItem => item.Thumbnail) />
+        }
+        else
+        {
+            <td class="text-danger">
+                No Published Date Found.
             </td>
-            <td>
-                <a asp-controller="Book" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+        }
+        @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
+        <td>
+            @if (thumbnail != string.Empty)
+            {
+                <img src="@thumbnail" alt="Thumbnail for @item.Title." />
+            }
+            else
+            {
+                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170" />
+            }
+        </td>
+        <td>
+            <a asp-controller="Book" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+    </tr>
 }
     </tbody>
 </table>

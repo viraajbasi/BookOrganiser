@@ -49,7 +49,7 @@
         else
         {
             <td class="text-danger">
-                Not Found.
+                Title Not Found.
             </td>
         }
         @if (item.Authors.Any())
@@ -61,7 +61,7 @@
         else
         {
             <td class="text-danger">
-                Not Found.
+                No Authors Found.
             </td>
         }
         @if (item.Publisher != string.Empty)
@@ -71,7 +71,7 @@
         else
         {
             <td class="text-danger">
-                Not Found.
+                Publisher Not Found.
             </td>
         }
         @if (item.PublishedDate != string.Empty)
@@ -83,7 +83,7 @@
         else
         {
             <td class="text-danger">
-                Not Found.
+                Published Date Not Found.
             </td>
         }
         @if (item.Description != string.Empty)
@@ -95,19 +95,19 @@
         else
         {
             <td class="text-danger">
-                Not Found.
+                Description Not Found.
             </td>
         }
         @if (item.Thumbnail != string.Empty)
         {
             <td>
-                <img src=@Html.DisplayFor(modelItem => item.Thumbnail)/>
+                <img src="@Html.DisplayFor(modelItem => item.Thumbnail)" alt="Thumbnail for @item.Title." />
             </td>
         }
         else
         {
             <td class="text-danger">
-                Not Found.
+                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170" />
             </td>
         }
         <td>

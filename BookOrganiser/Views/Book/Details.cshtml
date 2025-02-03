@@ -68,7 +68,7 @@
                 Description
             </dt>
             <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.Description)
+                @Html.Raw(Model.Description)
             </dd>
         }
         @if (Model.ISBN10 != string.Empty)
@@ -122,78 +122,20 @@
                 @string.Join(", ", Model.GoogleBooksCategories)
             </dd>
         }
-        @if (Model.Thumbnail != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Thumbnail
-            </dt>
-            <dd class = "col-sm-10">
-                <img src="@Model.Thumbnail" />
-            </dd>
-        }
-        @if (Model.SmallThumbnail != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Thumbnail (Small)
-            </dt>
-            <dd class = "col-sm-10">
-                <img src="@Model.SmallThumbnail" />
-            </dd>
-        }
-        @if (Model.SmallImage != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Cover (Small)
-            </dt>
-            <dd class = "col-sm-10">
-                <img src="@Model.SmallImage" />
-            </dd>
-        }
-        @if (Model.MediumImage != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Image (Medium)
-            </dt>
-            <dd class = "col-sm-10">
-                <img src="@Model.MediumImage" />
-            </dd>
-        }
-        @if (Model.LargeImage != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Image (Large)
-            </dt>
-            <dd class = "col-sm-10">
-                <img src="@Model.LargeImage" />
-            </dd>
-        }
-        @if (Model.ExtraLargeImage != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Image (Extra Large)
-            </dt>
-            <dd class = "col-sm-10">
-                <img src="@Model.ExtraLargeImage" />
-            </dd>
-        }
-        @if (Model.GoogleBooksLink != string.Empty)
-        {
-            <dt class = "col-sm-2">
-                Google Books Link
-            </dt>
-            <dd class = "col-sm-10">
-                <a href="@Model.GoogleBooksLink"></a>
-            </dd>
-        }
-        @if (Model.CustomCategories.Any())
-        {
-            <dt class = "col-sm-2">
-                Custom Categories
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.CustomCategories)
-            </dd>
-        }
+        @{ var thumbnail = (Model.Thumbnail != string.Empty) ? Model.Thumbnail : Model.SmallThumbnail; }
+        <dt class = "col-sm-2">
+            Thumbnail
+        </dt>
+        <dd class="col-sm-10">
+            @if (thumbnail != string.Empty)
+            {
+                <img src="@thumbnail" alt="Thumbnail for @Model.Title."/>
+            }
+            else
+            {
+                <img src="~/images/no-cover.jpg" alt="No thumbnail available for @Model.Title."/>
+            }
+        </dd>
     </dl>
 </div>
 <div>

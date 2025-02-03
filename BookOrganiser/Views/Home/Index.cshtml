@@ -12,81 +12,87 @@
     <title>Index</title>
 </head>
 <body>
+<form asp-controller="Account" asp-action="AddCategory" method="post">
+    <label class="form-label" for="identifier">Custom Category:</label>
+    <input class="form-control" type="text" id="category" name="category" required />
+    <button type="submit" class="btn btn-success">Add Category</button>
+</form>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                Title
-            </th>
-            <th>
-                Author(s)
-            </th>
-            <th>
-                Date Published
-            </th>
-        <th>
-            Thumbnail
-        </th>
-            <th>
-                Options
-            </th>
+    <tr>
+    <th>
+        Title
+    </th>
+    <th>
+        Author(s)
+    </th>
+    <th>
+        Date Published
+    </th>
+    <th>
+        Thumbnail
+    </th>
+    <th>
+        Options
+    </th>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    <tr>
-        @if (item.Title != string.Empty)
-        {
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-        }
-        else
-        {
-            <td class="text-danger">
-                Title Not Found.
-            </td>
-        }
-        @if (item.Authors.Any())
-        {
-            <td>
-                @string.Join(", ", item.Authors)
-            </td>
-        }
-        else
-        {
-            <td class="text-danger">
-                No Authors Found.
-            </td>
-        }
-        @if (item.PublishedDate != string.Empty)
-        {
-            <td>
-                @Html.DisplayFor(modelItem => item.PublishedDate)
-            </td>
-        }
-        else
-        {
-            <td class="text-danger">
-                No Published Date Found.
-            </td>
-        }
-        @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
-        <td>
-            @if (thumbnail != string.Empty)
+    @foreach (var item in Model)
+    {
+        <tr>
+            @if (item.Title != string.Empty)
             {
-                <img src="@thumbnail" alt="Thumbnail for @item.Title." />
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
             }
             else
             {
-                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170" />
+                <td class="text-danger">
+                    Title Not Found.
+                </td>
             }
-        </td>
-        <td>
-            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-            <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-        </td>
-    </tr>
-}
+            @if (item.Authors.Any())
+            {
+                <td>
+                    @string.Join(", ", item.Authors)
+                </td>
+            }
+            else
+            {
+                <td class="text-danger">
+                    No Authors Found.
+                </td>
+            }
+            @if (item.PublishedDate != string.Empty)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublishedDate)
+                </td>
+            }
+            else
+            {
+                <td class="text-danger">
+                    No Published Date Found.
+                </td>
+            }
+            @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
+            <td>
+                @if (thumbnail != string.Empty)
+                {
+                    <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                }
+                else
+                {
+                    <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                }
+            </td>
+            <td>
+                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
 </body>

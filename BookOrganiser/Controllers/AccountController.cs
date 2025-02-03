@@ -1,7 +1,9 @@
+using BookOrganiser.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using BookOrganiser.ViewModels;
 using BookOrganiser.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace BookOrganiser.Controllers;
 
@@ -9,11 +11,13 @@ public class AccountController : Controller
 {
     private readonly SignInManager<UserAccount> _signInManager;
     private readonly UserManager<UserAccount> _userManager;
+    private readonly AppDbContext _context;
 
-    public AccountController(SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager)
+    public AccountController(SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, AppDbContext context)
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _context = context;
     }
 
     public IActionResult Login()
@@ -162,5 +166,21 @@ public class AccountController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddCategory(string category)
+    {
+        if (ModelState.IsValid)
+        {
+            var entity = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name) ?? throw new AuthenticationFailureException("User must be logged in.");
+            entity.UserCategories.Add(category);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
+        }
+        
+        return NotFound();
     }
 }

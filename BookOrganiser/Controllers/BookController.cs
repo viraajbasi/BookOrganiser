@@ -112,6 +112,38 @@ public class BookController : Controller
 
         return NotFound();
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddBookToCategory(int id, string category)
+    {
+        if (ModelState.IsValid)
+        {
+            var entity = await _context.Books.FirstAsync(e => e.Id == id); 
+            entity.CustomCategories.Add(category);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
+        }
+
+        return NotFound();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveBookFromCategory(int id, string category)
+    {
+        if (ModelState.IsValid)
+        {
+            var entity = await _context.Books.FirstAsync(e => e.Id == id);
+            entity.CustomCategories.Remove(category);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
+        }
+
+        return NotFound();
+    }
     
     private static async Task<Volume?> PerformSearchQuery(string query, bool isISBN)
     {

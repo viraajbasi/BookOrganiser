@@ -12,7 +12,26 @@
     <title>Details</title>
 </head>
 <body>
-
+<div>
+    <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
+        <label class="form-label" for="category">Custom Category:</label>
+        <input class="form-control" type="text" id="category" name="category" required />
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-success">Add Book to Category</button>
+    </form>
+</div>
+<div class="form-group">
+    <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
+        <select for="category" name="category" class="form-control">
+            @foreach (var item in Model.CustomCategories)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-danger">Remove Book from Category</button>
+    </form>
+</div>
 <div>
     <h4>Book</h4>
     <hr />
@@ -120,6 +139,15 @@
             </dt>
             <dd class = "col-sm-10">
                 @string.Join(", ", Model.GoogleBooksCategories)
+            </dd>
+        }
+        @if (Model.CustomCategories.Any())
+        {
+            <dt class = "col-sm-2">
+                Custom Categories
+            </dt>
+            <dd class = "col-sm-10">
+                @string.Join(", ", Model.CustomCategories)
             </dd>
         }
         @{ var thumbnail = (Model.Thumbnail != string.Empty) ? Model.Thumbnail : Model.SmallThumbnail; }

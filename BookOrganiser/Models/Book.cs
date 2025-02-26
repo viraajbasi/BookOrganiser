@@ -25,5 +25,5 @@ public class Book
     public string LargeImage { get; set; } = string.Empty;
     public string ExtraLargeImage { get; set; } = string.Empty;
     public string GoogleBooksLink { get; set; } = string.Empty;
-    public string CustomCategories { get; set; } = string.Empty;
+    public IList<string> CustomCategories { get; set; } = new List<string>();
 }

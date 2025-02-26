@@ -29,12 +29,14 @@ public class BookController : Controller
             return NotFound();
         }
 
-        var book = await _context.Books
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
         if (book == null)
         {
             return NotFound();
         }
+        
+        var categories = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name).UserCategories ?? throw new AuthenticationFailureException("User must be logged in.");
+        ViewBag.Categories = categories;
 
         return View(book);
     }

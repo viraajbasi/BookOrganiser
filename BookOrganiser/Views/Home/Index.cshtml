@@ -17,6 +17,11 @@
     <input class="form-control" type="text" id="category" name="category" required />
     <button type="submit" class="btn btn-success">Add Category</button>
 </form>
+
+@foreach (var category in (List<string>)ViewBag.Categories)
+{
+    <h1>@category</h1>
+}
 <table class="table">
     <thead>
     <tr>

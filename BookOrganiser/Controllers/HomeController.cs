@@ -30,6 +30,9 @@ public class HomeController : Controller
         }
         
         var userBooks = _context.Books.Where(e => e.UserId == user.Id).ToList();
+        var categories = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name).UserCategories 
+                         ?? throw new AuthenticationFailureException("User must be logged in.");
+        ViewBag.Categories = categories;
         
         return View(userBooks);
     }

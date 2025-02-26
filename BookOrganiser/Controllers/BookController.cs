@@ -35,7 +35,8 @@ public class BookController : Controller
             return NotFound();
         }
         
-        var categories = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name).UserCategories ?? throw new AuthenticationFailureException("User must be logged in.");
+        var categories = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name).UserCategories
+                         ?? throw new AuthenticationFailureException("User must be logged in.");
         ViewBag.Categories = categories;
 
         return View(book);
@@ -203,7 +204,8 @@ public class BookController : Controller
     private async Task<Book> GoogleBooksToModel(Volume book)
     {
         var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
-        var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier) ?? new Dictionary<string, string>();
+        var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier)
+                          ?? new Dictionary<string, string>();
 
         return new Book()
         {

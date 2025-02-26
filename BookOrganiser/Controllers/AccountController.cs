@@ -183,4 +183,20 @@ public class AccountController : Controller
         
         return NotFound();
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteCategory(string category)
+    {
+        if (ModelState.IsValid)
+        {
+            var entity = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name) ?? throw new AuthenticationFailureException("User must be logged in.");
+            entity.UserCategories.Remove(category);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
+        }
+        
+        return NotFound();
+    }
 }

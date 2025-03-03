@@ -24,6 +24,7 @@ public class BookController : Controller
 
     public async Task<IActionResult> Details(int? id)
     {
+        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
         if (id == null)
         {
             return NotFound();
@@ -34,10 +35,8 @@ public class BookController : Controller
         {
             return NotFound();
         }
-        
-        var categories = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name).UserCategories
-                         ?? throw new AuthenticationFailureException("User must be logged in.");
-        ViewBag.Categories = categories;
+
+        ViewBag.Categories = user.UserCategories;
 
         return View(book);
     }

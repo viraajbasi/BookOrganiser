@@ -172,10 +172,10 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddCategory(string category)
     {
+        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
         if (ModelState.IsValid)
         {
-            var entity = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name) ?? throw new AuthenticationFailureException("User must be logged in.");
-            entity.UserCategories.Add(category);
+            user.UserCategories.Add(category);
             await _context.SaveChangesAsync();
             
             return RedirectToAction("Index", "Home");
@@ -188,10 +188,10 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteCategory(string category)
     {
+        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
         if (ModelState.IsValid)
         {
-            var entity = _context.UserAccounts.FirstOrDefault(e => e.UserName == User.Identity.Name) ?? throw new AuthenticationFailureException("User must be logged in.");
-            entity.UserCategories.Remove(category);
+            user.UserCategories.Remove(category);
             await _context.SaveChangesAsync();
             
             return RedirectToAction("Index", "Home");

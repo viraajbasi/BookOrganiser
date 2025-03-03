@@ -220,7 +220,7 @@
                     <option value="" disabled selected hidden>Please Choose...</option>
                     @foreach (var item in (List<string>)ViewBag.Categories)
                     {
-                        <option value="@item">@item</option>
+                        <option value="@item">@textInfo.ToTitleCase(item)</option>
                     }
                 </select>
             </div>

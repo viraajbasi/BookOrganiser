@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    var textInfo = new CultureInfo("en-GB", false).TextInfo;
 }
 
 <!DOCTYPE html>
@@ -169,9 +170,10 @@
             <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
                 <div class="mb-3">
                     <select for="category" name="category" class="form-select">
+                        <option value="" disabled selected hidden>Please Choose...</option>
                         @foreach (var item in addCategories)
                         {
-                            <option value="@item">@item</option>
+                            <option value="@item">@textInfo.ToTitleCase(item)</option>
                         }
                     </select>
                 </div>
@@ -184,7 +186,6 @@
     }
     @{
         var removeCategories = (List<string>)ViewBag.Categories;
-        var textInfo = new CultureInfo("en-GB", false).TextInfo;
         removeCategories = removeCategories.Intersect(Model.CustomCategories).ToList();
         <div class="form-group mb-3">
             <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
@@ -193,7 +194,7 @@
                         <option value="" disabled selected hidden>Please Choose...</option>
                         @foreach (var item in removeCategories)
                         {
-                            <option value="@item">"@textInfo.ToTitleCase(item)</option>
+                            <option value="@item">@textInfo.ToTitleCase(item)</option>
                         }
                     </select>
                 </div>

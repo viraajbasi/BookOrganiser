@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var textInfo = new CultureInfo("en-GB", false).TextInfo;
 }
 
 <!DOCTYPE html>
@@ -18,7 +19,6 @@
 <hr />
 @{
     var emptyCategories = new List<string>();
-    var textInfo = new CultureInfo("en-GB", false).TextInfo;
     @foreach (var category in (List<string>)ViewBag.Categories)
     {
         var books = Model.Where(e => e.CustomCategories.Contains(category)).ToList();

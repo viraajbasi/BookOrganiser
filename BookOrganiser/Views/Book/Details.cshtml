@@ -176,6 +176,7 @@
             <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
                 <div class="mb-3">
                     <select for="category" name="category" class="form-select">
+                        <option value="" disabled selected hidden>Please Choose...</option>
                         @foreach (var item in removeCategories)
                         {
                             <option value="@item">@item</option>

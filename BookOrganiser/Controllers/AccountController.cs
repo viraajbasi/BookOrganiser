@@ -189,8 +189,14 @@ public class AccountController : Controller
     public async Task<IActionResult> DeleteCategory(string category)
     {
         var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
+        var booksToUpdate = _context.Books.Where(e => e.UserAccount == user && e.CustomCategories.Contains(category));
+        
         if (ModelState.IsValid)
         {
+            foreach (var book in booksToUpdate)
+            {
+                book.CustomCategories.Remove(category);
+            }
             user.UserCategories.Remove(category);
             await _context.SaveChangesAsync();
             

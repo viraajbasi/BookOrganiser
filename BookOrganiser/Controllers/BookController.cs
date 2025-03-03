@@ -37,6 +37,7 @@ public class BookController : Controller
         }
 
         ViewBag.Categories = user.UserCategories;
+        ViewBag.AIEnabled = user.AcceptedAIFeatures;
 
         return View(book);
     }

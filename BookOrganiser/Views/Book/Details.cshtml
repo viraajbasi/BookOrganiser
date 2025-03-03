@@ -1,3 +1,5 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model BookOrganiser.Models.Book
 
 @{
@@ -147,6 +149,17 @@
     </dl>
 </div>
 <div>
+    <h1>AI Summary</h1>
+    @if ((bool)ViewBag.AIEnabled)
+    {
+        <p>foo</p>
+    }
+    else
+    {
+        <p>To enable AI features, you must read the disclaimer and opt-in first.</p>
+    }
+</div>
+<div>
     <h1>Category Management</h1>
     <hr />
     @{
@@ -171,6 +184,7 @@
     }
     @{
         var removeCategories = (List<string>)ViewBag.Categories;
+        var textInfo = new CultureInfo("en-GB", false).TextInfo;
         removeCategories = removeCategories.Intersect(Model.CustomCategories).ToList();
         <div class="form-group mb-3">
             <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
@@ -179,7 +193,7 @@
                         <option value="" disabled selected hidden>Please Choose...</option>
                         @foreach (var item in removeCategories)
                         {
-                            <option value="@item">@item</option>
+                            <option value="@item">"@textInfo.ToTitleCase(item)</option>
                         }
                     </select>
                 </div>

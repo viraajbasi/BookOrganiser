@@ -130,7 +130,7 @@
                 Custom Categories
             </dt>
             <dd class = "col-sm-10">
-                @string.Join(", ", Model.CustomCategories)
+                @textInfo.ToTitleCase(string.Join(", ", Model.CustomCategories))
             </dd>
         }
         @{ var thumbnail = (Model.Thumbnail != string.Empty) ? Model.Thumbnail : Model.SmallThumbnail; }

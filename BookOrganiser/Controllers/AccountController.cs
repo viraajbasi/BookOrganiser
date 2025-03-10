@@ -37,11 +37,9 @@ public class AccountController : Controller
             {
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Email or password is incorrect.");
-                return View(model);
-            }
+            
+            ModelState.AddModelError(string.Empty, "Email or password is incorrect.");
+            return View(model);
         }
 
         return View(model);
@@ -58,7 +56,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            UserAccount userAccount = new UserAccount
+            var userAccount = new UserAccount
             {
                 FullName = model.Name,
                 Email = model.Email,
@@ -71,15 +69,13 @@ public class AccountController : Controller
             {
                 return RedirectToAction("Login", "Account");
             }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
 
-                return View(model);
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
             }
+
+            return View(model);
         }
 
         return View(model);
@@ -103,10 +99,8 @@ public class AccountController : Controller
                 ModelState.AddModelError(string.Empty, "Something went wrong.");
                 return View(model);
             }
-            else
-            {
-                return RedirectToAction("ChangePassword", "Account", new { username = user.UserName });
-            }
+
+            return RedirectToAction("ChangePassword", "Account", new { username = user.UserName });
         }
 
         return View(model);
@@ -139,27 +133,21 @@ public class AccountController : Controller
                     await _userManager.AddPasswordAsync(user, model.NewPassword);
                     return RedirectToAction("Login", "Account");
                 }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
 
-                    return View(model);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Email not found.");
+
                 return View(model);
             }
-        }
-        else
-        {
-            ModelState.AddModelError(string.Empty, "Something went wrong. Try again later.");
+
+            ModelState.AddModelError(string.Empty, "Email not found.");
             return View(model);
         }
+
+        ModelState.AddModelError(string.Empty, "Something went wrong. Try again later.");
+        return View(model);
     }
 
     public async Task<IActionResult> Logout()

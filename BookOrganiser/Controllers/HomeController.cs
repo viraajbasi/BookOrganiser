@@ -22,8 +22,7 @@ public class HomeController : Controller
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
-
+        var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
             return RedirectToAction("Login", "Account");
@@ -41,8 +40,14 @@ public class HomeController : Controller
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult Error(string? message, int statusCode = 500)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var viewModel = new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+            ErrorMessage = message ?? "An Unknown Error has occurred.",
+            StatusCode = statusCode
+        };
+        return View(viewModel);
     }
 }

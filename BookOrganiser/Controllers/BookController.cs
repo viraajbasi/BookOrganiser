@@ -24,7 +24,13 @@ public class BookController : Controller
 
     public async Task<IActionResult> Details(int? id)
     {
-        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
+        var user = await _userManager.GetUserAsync(User);
+        
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         if (id == null)
         {
             return NotFound();
@@ -80,6 +86,12 @@ public class BookController : Controller
 
     public async Task<IActionResult> SearchResults(string title)
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var results = await GetSearchResults(title);
 
         if (results == null)
@@ -91,7 +103,7 @@ public class BookController : Controller
 
         foreach (var result in results)
         {
-            bookResponse.Add(await GoogleBooksToModel(result));
+            bookResponse.Add(GoogleBooksToModel(result, user));
         }
 
         return View(bookResponse);
@@ -101,12 +113,18 @@ public class BookController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddBook(string identifier, string isISBN)
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var queryType = Convert.ToBoolean(isISBN);
         var result = await PerformSearchQuery(identifier, queryType);
         
         if (result != null && ModelState.IsValid)
         {
-            var bookResponse = await GoogleBooksToModel(result);
+            var bookResponse = GoogleBooksToModel(result, user);
             _context.Add(bookResponse);
             await _context.SaveChangesAsync();
 
@@ -201,9 +219,8 @@ public class BookController : Controller
         return null;
     }
     
-    private async Task<Book> GoogleBooksToModel(Volume book)
+    private Book GoogleBooksToModel(Volume book, UserAccount user)
     {
-        var user = await _userManager.GetUserAsync(User) ?? throw new AuthenticationFailureException("User must be logged in.");
         var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier)
                           ?? new Dictionary<string, string>();
 

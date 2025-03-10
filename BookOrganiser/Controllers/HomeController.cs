@@ -42,12 +42,12 @@ public class HomeController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error(string? message, int statusCode = 500)
     {
-        var viewModel = new ErrorViewModel
-        {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-            ErrorMessage = message ?? "An Unknown Error has occurred.",
-            StatusCode = statusCode
-        };
-        return View(viewModel);
+        return View(
+            new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                ErrorMessage = message ?? "An Unknown Error has occurred.",
+                StatusCode = statusCode
+            });
     }
 }

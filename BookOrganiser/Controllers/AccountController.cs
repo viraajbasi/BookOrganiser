@@ -173,7 +173,7 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Home");
         }
         
-        return NotFound();
+        return RedirectToAction("Error", "Home", new { message = "Unknown error occurred whilst creating category" });
     }
 
     [HttpPost]
@@ -200,6 +200,6 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Home");
         }
         
-        return NotFound();
+        return RedirectToAction("Error", "Home", new { message = "Unknown error occured whilst deleting category" });
     }
 }

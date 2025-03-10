@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
 using BookOrganiser.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -33,13 +32,13 @@ public class BookController : Controller
         
         if (id == null)
         {
-            return NotFound();
+            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
         }
 
         var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
         if (book == null)
         {
-            return NotFound();
+            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
         }
 
         ViewBag.Categories = user.UserCategories;
@@ -52,14 +51,14 @@ public class BookController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
         }
 
         var book = await _context.Books
             .FirstOrDefaultAsync(m => m.Id == id);
         if (book == null)
         {
-            return NotFound();
+            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
         }
 
         return View(book);
@@ -131,7 +130,7 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        return NotFound();
+        return RedirectToAction("Error", "Home", new { message = "Invalid search query" });
     }
 
     [HttpPost]
@@ -147,7 +146,7 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        return NotFound();
+        return RedirectToAction("Error", "Home", new { message = $"Error adding book to category: {category}" });
     }
 
     [HttpPost]
@@ -163,7 +162,7 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        return NotFound();
+        return RedirectToAction("Error", "Home", new { message = $"Error removing book from category: {category}" });
     }
     
     private static async Task<Volume?> PerformSearchQuery(string query, bool isISBN)

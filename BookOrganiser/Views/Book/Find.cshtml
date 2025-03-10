@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Add Book";
 }
 
 <!DOCTYPE html>
@@ -7,23 +7,31 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>Add Book</title>
 </head>
 <body>
-    <div>
+    <div class="form-group">
         <form asp-controller="Book" asp-action="AddBook" method="post">
-            <input type="hidden" name="isISBN" value="true" />
-            <label class="form-label" for="identifier">Book ISBN:</label>
-            <input class="form-control" type="text" id="identifier" name="identifier" required />
-            <input type="submit" value="Add Book" class="btn btn-success w-100 p-2" />
+            <div class="mb-3">
+                <input type="hidden" name="isISBN" value="true"/>
+                <label class="form-label" for="identifier">Book ISBN:</label>
+                <input class="form-control" type="text" id="identifier" name="identifier" required/>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Add Book" class="btn btn-success w-100 p-2"/>
+            </div>
         </form>
     </div>
-    <div>
-    <form asp-controller="Book" asp-action="SearchResults">
-        <label class="form-label" for="title">Book Title:</label>
-        <input class="form-control" type="text" id="title" name="title" required />
-        <input type="submit" value="Add Book" class="btn btn-success w-100 p-2" />
-    </form>
+    <div class="form-group">
+        <form asp-controller="Book" asp-action="SearchResults">
+            <div class="mb-3">
+                <label class="form-label" for="title">Book Title:</label>
+                <input class="form-control" type="text" id="title" name="title" required/>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Add Book" class="btn btn-success w-100 p-2"/>
+            </div>
+        </form>
     </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BookOrganiser.ViewModels;
+namespace BookOrganiser.ViewModels.Account;
 
 public class LoginViewModel
 {

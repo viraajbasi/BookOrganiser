@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using BookOrganiser.ViewModels;
 using BookOrganiser.Models;
+using BookOrganiser.ViewModels.Account;
 using Microsoft.AspNetCore.Authentication;
 
 namespace BookOrganiser.Controllers;

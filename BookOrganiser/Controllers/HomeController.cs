@@ -40,6 +40,19 @@ public class HomeController : Controller
         return View();
     }
 
+    public async Task<IActionResult> EditCategories()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        ViewBag.Categories = user.UserCategories;
+        
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error(string? message, bool? showInfoText, int statusCode = 500)
     {
@@ -74,6 +87,8 @@ public class HomeController : Controller
         {
             user.UserCategories.Add(category);
             await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
         }
         
         return RedirectToAction("Error", "Home", new { message = $"Unknown error occurred whilst creating category '{category}'" });

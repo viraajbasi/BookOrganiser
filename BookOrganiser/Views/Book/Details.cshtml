@@ -153,7 +153,7 @@
             }
         </dd>
     </dl>
-    <div>
+    <div class="mb-3">
         <form asp-action="Delete">
             <input type="hidden" asp-for="Id" />
             <button type="submit" class="btn btn-danger">Delete Book From Library</button>
@@ -161,10 +161,10 @@
     </div>
 </div>
 <div>
+    <h1>AI Summary</h1>
     <hr/>
     @if ((bool)ViewBag.AIEnabled)
     {
-        <h1>AI Summary</h1>
         <p>foo</p>
     }
     else
@@ -175,49 +175,50 @@
     }
 </div>
 <div>
-    <h1>Category Management</h1>
-    <hr/>
     @{
         var addCategories = (List<string>)ViewBag.Categories;
         addCategories = addCategories.Except(Model.CustomCategories).ToList();
-        <div class="form-group mb-3">
-            <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
-                <div class="mb-3">
-                    <select for="category" name="category" class="form-select" required>
-                        <option value="" disabled selected hidden>Please Choose...</option>
-                        @foreach (var item in addCategories)
-                        {
-                            <option value="@item">@textInfo.ToTitleCase(item)</option>
-                        }
-                    </select>
-                </div>
-                <input type="hidden" name="id" value="@Model.Id"/>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-success">Add Book to Category</button>
-                </div>
-            </form>
-        </div>
-    }
-    @{
         var removeCategories = (List<string>)ViewBag.Categories;
         removeCategories = removeCategories.Intersect(Model.CustomCategories).ToList();
-        <div class="form-group mb-3">
-            <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
-                <div class="mb-3">
-                    <select for="category" name="category" class="form-select" required>
-                        <option value="" disabled selected hidden>Please Choose...</option>
-                        @foreach (var item in removeCategories)
-                        {
-                            <option value="@item">@textInfo.ToTitleCase(item)</option>
-                        }
-                    </select>
-                </div>
-                <input type="hidden" name="id" value="@Model.Id"/>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-danger">Remove Book from Category</button>
-                </div>
-            </form>
-        </div>
+        if (addCategories.Any() || removeCategories.Any())
+        {
+            <h1>Category Management</h1>
+            <hr/>
+            <div class="form-group mb-3">
+                <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
+                    <div class="mb-3">
+                        <select for="category" name="category" class="form-select" required>
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            @foreach (var item in addCategories)
+                            {
+                                <option value="@item">@textInfo.ToTitleCase(item)</option>
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="id" value="@Model.Id"/>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-success">Add Book to Category</button>
+                    </div>
+                </form>
+            </div>
+            <div class="form-group mb-3">
+                <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
+                    <div class="mb-3">
+                        <select for="category" name="category" class="form-select" required>
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            @foreach (var item in removeCategories)
+                            {
+                                <option value="@item">@textInfo.ToTitleCase(item)</option>
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="id" value="@Model.Id"/>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-danger">Remove Book from Category</button>
+                    </div>
+                </form>
+            </div>
+        }
     }
 </div>
 </body>

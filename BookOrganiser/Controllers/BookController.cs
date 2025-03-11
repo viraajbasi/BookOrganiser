@@ -98,7 +98,7 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddBook(string identifier, string isISBN)
+    public async Task<IActionResult> AddBook(string identifier, bool isISBN)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -106,8 +106,7 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
-        var queryType = Convert.ToBoolean(isISBN);
-        var result = await PerformSearchQuery(identifier, queryType);
+        var result = await PerformSearchQuery(identifier, isISBN);
         
         if (result != null && ModelState.IsValid)
         {

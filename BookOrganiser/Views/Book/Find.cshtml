@@ -17,28 +17,32 @@
             Error: @TempData["Error"]
         </div>
     }
-    <div class="form-group">
-        <form asp-controller="Book" asp-action="AddBook" method="post">
-            <div class="mb-3">
-                <input type="hidden" name="isISBN" value="true"/>
-                <label class="form-label" for="identifier">Book ISBN:</label>
-                <input class="form-control" type="text" id="identifier" name="identifier" required/>
+    <div class="centered-container">
+        <div class="custom-box">
+            <div class="form-group">
+                <form asp-controller="Book" asp-action="AddBook" method="post">
+                    <div class="mb-3">
+                        <input type="hidden" name="isISBN" value="true"/>
+                        <label class="form-label" for="identifier">Book ISBN:</label>
+                        <input class="form-control" type="text" id="identifier" name="identifier" required/>
+                    </div>
+                    <div class="mb-3">
+                        <input type="submit" value="Add Book" class="btn btn-success w-100 p-2"/>
+                    </div>
+                </form>
             </div>
-            <div class="mb-3">
-                <input type="submit" value="Add Book" class="btn btn-success w-100 p-2"/>
+            <div class="form-group">
+                <form asp-controller="Book" asp-action="SearchResults">
+                    <div class="mb-3">
+                        <label class="form-label" for="title">Book Title:</label>
+                        <input class="form-control" type="text" id="title" name="title" required/>
+                    </div>
+                    <div class="mb-3">
+                        <input type="submit" value="Add Book" class="btn btn-success w-100 p-2"/>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-    <div class="form-group">
-        <form asp-controller="Book" asp-action="SearchResults">
-            <div class="mb-3">
-                <label class="form-label" for="title">Book Title:</label>
-                <input class="form-control" type="text" id="title" name="title" required/>
-            </div>
-            <div class="mb-3">
-                <input type="submit" value="Add Book" class="btn btn-success w-100 p-2"/>
-            </div>
-        </form>
+        </div>
     </div>
 </body>
 </html>

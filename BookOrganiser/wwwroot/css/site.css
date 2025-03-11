@@ -42,7 +42,7 @@ body {
   padding: 2rem 0;
 }
 
-.account-box {
+.custom-box {
   background-color: #ffffff;
   padding: 30px;
   border-radius: 10px;
@@ -120,6 +120,17 @@ body {
   background: #555;
 }
 
+.centered-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 3rem;
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
 @media screen and (max-width: 768px) {
   .bookshelf-item {
     width: 120px;
@@ -132,6 +143,11 @@ body {
 
   .bookshelf-title {
     font-size: 13px;
+  }
+  
+  .form-container {
+    max-width: 100%;
+    padding: 0 15px;
   }
 }
 

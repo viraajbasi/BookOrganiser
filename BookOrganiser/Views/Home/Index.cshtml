@@ -53,9 +53,6 @@
                 <th>
                     Thumbnail
                 </th>
-                <th>
-                    Options
-                </th>
                 </thead>
                 <tbody>
                 @foreach (var item in books)
@@ -101,16 +98,16 @@
                         <td>
                             @if (thumbnail != string.Empty)
                             {
-                                <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                    <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                                </a>
                             }
                             else
                             {
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
                                 <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                                </a>
                             }
-                        </td>
-                        <td>
-                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                         </td>
                     </tr>
                 }
@@ -148,9 +145,6 @@
             </th>
             <th>
                 Thumbnail
-            </th>
-            <th>
-                Options
             </th>
             </thead>
             <tbody>
@@ -197,16 +191,16 @@
                     <td>
                         @if (thumbnail != string.Empty)
                         {
-                            <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                            </a>
                         }
                         else
                         {
-                            <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                            </a>
                         }
-                    </td>
-                    <td>
-                        <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>
             }

@@ -47,27 +47,15 @@ public class BookController : Controller
         return View(book);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
         {
             return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
         }
-
-        var book = await _context.Books
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (book == null)
-        {
-            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
-        }
-
-        return View(book);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
+        
         var book = await _context.Books.FindAsync(id);
         if (book != null)
         {

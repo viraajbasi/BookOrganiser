@@ -169,7 +169,7 @@
         <div class="form-group mb-3">
             <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
                 <div class="mb-3">
-                    <select for="category" name="category" class="form-select">
+                    <select for="category" name="category" class="form-select" required>
                         <option value="" disabled selected hidden>Please Choose...</option>
                         @foreach (var item in addCategories)
                         {
@@ -190,7 +190,7 @@
         <div class="form-group mb-3">
             <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
                 <div class="mb-3">
-                    <select for="category" name="category" class="form-select">
+                    <select for="category" name="category" class="form-select" required>
                         <option value="" disabled selected hidden>Please Choose...</option>
                         @foreach (var item in removeCategories)
                         {

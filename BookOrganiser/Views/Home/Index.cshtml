@@ -35,84 +35,32 @@
             emptyCategories.Add(category);
             continue;
         }
-
-        <div>
-            <h2>@textInfo.ToTitleCase(category)</h2>
-            <table class="table">
-                <thead>
-                <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Author(s)
-                </th>
-                <th>
-                    Date Published
-                </th>
-                <th>
-                    Thumbnail
-                </th>
-                </thead>
-                <tbody>
+        
+        <h2>@textInfo.ToTitleCase(category)</h2>
+        <div class="bookshelf-container">
+            <div class="bookshelf-item-list">
                 @foreach (var item in books)
                 {
-                    <tr>
-                        @if (item.Title != string.Empty)
-                        {
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="text-danger">
-                                Title Not Found.
-                            </td>
-                        }
-                        @if (item.Authors.Any())
-                        {
-                            <td>
-                                @string.Join(", ", item.Authors)
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="text-danger">
-                                No Authors Found.
-                            </td>
-                        }
-                        @if (item.PublishedDate != string.Empty)
-                        {
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PublishedDate)
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="text-danger">
-                                No Published Date Found.
-                            </td>
-                        }
-                        @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
-                        <td>
+                    var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail;
+                    <div class="bookshelf-item">
+                        <div class="bookshelf-thumbnail">
                             @if (thumbnail != string.Empty)
                             {
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
-                                    <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                                    <img src="@thumbnail" alt="Thumbnail for @item.Title." title="@item.Title"/>
                                 </a>
                             }
                             else
                             {
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
-                                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                                    <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170" title="@item.Title"/>
                                 </a>
                             }
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="bookshelf-title">@item.Title</div>
+                    </div>
                 }
-                </tbody>
-            </table>
+            </div>
         </div>
     }
     
@@ -127,87 +75,37 @@
         }
     }
 }
-<div>
-    @if ((bool)ViewBag.HasAnyBooks)
+@{
+    if ((bool)ViewBag.HasAnyBooks)
     {
         <h2>Unsorted Books</h2>
-        <table class="table">
-            <thead>
-            <tr>
-            <th>
-                Title
-            </th>
-            <th>
-                Author(s)
-            </th>
-            <th>
-                Date Published
-            </th>
-            <th>
-                Thumbnail
-            </th>
-            </thead>
-            <tbody>
-            @foreach (var item in Model.Where(e => !e.CustomCategories.Any()))
-            {
-                <tr>
-                    @if (item.Title != string.Empty)
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                    }
-                    else
-                    {
-                        <td class="text-danger">
-                            Title Not Found.
-                        </td>
-                    }
-                    @if (item.Authors.Any())
-                    {
-                        <td>
-                            @string.Join(", ", item.Authors)
-                        </td>
-                    }
-                    else
-                    {
-                        <td class="text-danger">
-                            No Authors Found.
-                        </td>
-                    }
-                    @if (item.PublishedDate != string.Empty)
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PublishedDate)
-                        </td>
-                    }
-                    else
-                    {
-                        <td class="text-danger">
-                            No Published Date Found.
-                        </td>
-                    }
-                    @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
-                    <td>
-                        @if (thumbnail != string.Empty)
-                        {
-                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
-                                <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
-                                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
-                            </a>
-                        }
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
+        <div class="bookshelf-container">
+            <div class="bookshelf-item-list">
+                @foreach (var item in Model.Where(e => !e.CustomCategories.Any()))
+                {
+                    var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail;
+                    <div class="bookshelf-item">
+                        <div class="bookshelf-thumbnail">
+                            @if (thumbnail != string.Empty)
+                            {
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                    <img src="@thumbnail" alt="Thumbnail for @item.Title." title="@item.Title"/>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                    <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170" title="@item.Title"/>
+                                </a>
+                            }
+                        </div>
+                        <div class="bookshelf-title">@item.Title</div>
+                    </div>
+                }
+            </div>
+        </div>
     }
-</div>
+}
 <div>
     <h1>Category Management</h1>
     <hr/>

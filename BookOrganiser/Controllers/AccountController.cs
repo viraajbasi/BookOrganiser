@@ -100,25 +100,25 @@ public class AccountController : Controller
                 return View(model);
             }
 
-            return RedirectToAction("ChangePassword", "Account", new { username = user.UserName });
+            return RedirectToAction("ForgotPassword", "Account", new { username = user.UserName });
         }
 
         return View(model);
     }
 
-    public IActionResult ChangePassword(string username)
+    public IActionResult ForgotPassword(string username)
     {
         if (string.IsNullOrEmpty(username))
         {
             return RedirectToAction("VerifyEmail", "Account");
         }
 
-        return View(new ChangePasswordViewModel { Email = username });
+        return View(new ForgotPasswordViewModel { Email = username });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
     {
         if (ModelState.IsValid)
         {

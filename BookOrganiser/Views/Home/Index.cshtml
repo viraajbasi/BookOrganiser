@@ -17,6 +17,14 @@
 <body>
 <h1>My Library</h1>
 <hr />
+@if (!(bool)ViewBag.HasAnyBooks)
+{
+    <div class="alert alert-primary">
+        <p>
+            <strong>You currently don't have any books in your library!</strong> Click <a asp-controller="Book" asp-action="Find">here</a> to get started (or alternatively click "Add Book").
+        </p>
+    </div>
+}
 @{
     var emptyCategories = new List<string>();
     @foreach (var category in (List<string>)ViewBag.Categories)
@@ -28,7 +36,104 @@
             continue;
         }
 
-        <h2>@textInfo.ToTitleCase(category)</h2>
+        <div>
+            <h2>@textInfo.ToTitleCase(category)</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Author(s)
+                </th>
+                <th>
+                    Date Published
+                </th>
+                <th>
+                    Thumbnail
+                </th>
+                <th>
+                    Options
+                </th>
+                </thead>
+                <tbody>
+                @foreach (var item in books)
+                {
+                    <tr>
+                        @if (item.Title != string.Empty)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-danger">
+                                Title Not Found.
+                            </td>
+                        }
+                        @if (item.Authors.Any())
+                        {
+                            <td>
+                                @string.Join(", ", item.Authors)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-danger">
+                                No Authors Found.
+                            </td>
+                        }
+                        @if (item.PublishedDate != string.Empty)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PublishedDate)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-danger">
+                                No Published Date Found.
+                            </td>
+                        }
+                        @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
+                        <td>
+                            @if (thumbnail != string.Empty)
+                            {
+                                <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
+                            }
+                            else
+                            {
+                                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    
+    @if (emptyCategories.Any())
+    {
+        foreach (var category in emptyCategories)
+        {
+            <h2>@textInfo.ToTitleCase(category)</h2>
+            <div class="alert alert-warning">
+                <p>There are no books in this category.</p>
+            </div>
+        }
+    }
+}
+<div>
+    @if ((bool)ViewBag.HasAnyBooks)
+    {
+        <h2>Unsorted Books</h2>
         <table class="table">
             <thead>
             <tr>
@@ -49,7 +154,7 @@
             </th>
             </thead>
             <tbody>
-            @foreach (var item in books)
+            @foreach (var item in Model.Where(e => !e.CustomCategories.Any()))
             {
                 <tr>
                     @if (item.Title != string.Empty)
@@ -108,96 +213,6 @@
             </tbody>
         </table>
     }
-    
-    @if (emptyCategories.Any())
-    {
-        foreach (var category in emptyCategories)
-        {
-            <h2>@textInfo.ToTitleCase(category)</h2>
-            <p>There are no books in this category.</p>
-        }
-    }
-}
-<div>
-    <h2>Unsorted Books</h2>
-    <table class="table">
-        <thead>
-        <tr>
-        <th>
-            Title
-        </th>
-        <th>
-            Author(s)
-        </th>
-        <th>
-            Date Published
-        </th>
-        <th>
-            Thumbnail
-        </th>
-        <th>
-            Options
-        </th>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.Where(e => !e.CustomCategories.Any()))
-        {
-            <tr>
-                @if (item.Title != string.Empty)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        Title Not Found.
-                    </td>
-                }
-                @if (item.Authors.Any())
-                {
-                    <td>
-                        @string.Join(", ", item.Authors)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        No Authors Found.
-                    </td>
-                }
-                @if (item.PublishedDate != string.Empty)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PublishedDate)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        No Published Date Found.
-                    </td>
-                }
-                @{ var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail; }
-                <td>
-                    @if (thumbnail != string.Empty)
-                    {
-                        <img src="@thumbnail" alt="Thumbnail for @item.Title."/>
-                    }
-                    else
-                    {
-                        <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
-                    }
-                </td>
-                <td>
-                    <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-controller="Book" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
 </div>
 <div>
     <h1>Category Management</h1>
@@ -216,7 +231,7 @@
     <div class="form-group mb-3">
         <form asp-controller="Account" asp-action="DeleteCategory" method="post">
             <div class="mb-3">
-                <select for="category" name="category" class="form-select">
+                <select for="category" name="category" class="form-select" required>
                     <option value="" disabled selected hidden>Please Choose...</option>
                     @foreach (var item in (List<string>)ViewBag.Categories)
                     {

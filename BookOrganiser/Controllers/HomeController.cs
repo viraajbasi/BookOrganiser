@@ -29,6 +29,8 @@ public class HomeController : Controller
         }
         
         var userBooks = _context.Books.Where(e => e.UserId == user.Id).ToList();
+        
+        ViewBag.HasAnyBooks = userBooks.Any();
         ViewBag.Categories = user.UserCategories;
         
         return View(userBooks);

@@ -218,7 +218,7 @@ public class BookController : Controller
         return null;
     }
     
-    private Book GoogleBooksToModel(Volume book, UserAccount user)
+    private static Book GoogleBooksToModel(Volume book, UserAccount user)
     {
         var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier)
                           ?? new Dictionary<string, string>();

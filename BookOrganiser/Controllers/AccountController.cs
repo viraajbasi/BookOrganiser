@@ -164,6 +164,11 @@ public class AccountController : Controller
         {
             return RedirectToAction("Login", "Account");
         }
+
+        if (user.UserCategories.Contains(category))
+        {
+            return RedirectToAction("Error", "Home", new { message = "Category already exists", showInfoText = false });
+        }
         
         if (ModelState.IsValid)
         {

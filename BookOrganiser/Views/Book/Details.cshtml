@@ -150,14 +150,17 @@
     </dl>
 </div>
 <div>
-    <h1>AI Summary</h1>
+    <hr />
     @if ((bool)ViewBag.AIEnabled)
     {
+        <h1>AI Summary</h1>
         <p>foo</p>
     }
     else
     {
-        <p>To enable AI features, you must read the disclaimer and opt-in first.</p>
+        <div class="alert alert-warning">
+            <p>To enable AI features, you must read the disclaimer and opt-in first.</p>
+        </div>
     }
 </div>
 <div>

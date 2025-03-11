@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BookOrganiser.Models;
 using BookOrganiser.Data;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -42,14 +41,15 @@ public class HomeController : Controller
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error(string? message, int statusCode = 500)
+    public IActionResult Error(string? message, bool? showInfoText, int statusCode = 500)
     {
         return View(
             new ErrorViewModel
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                ErrorMessage = message ?? "An Unknown Error has occurred.",
-                StatusCode = statusCode
+                ErrorMessage = message ?? "An Unknown Error Has Occurred",
+                StatusCode = statusCode,
+                ShowInfoText = showInfoText ?? true
             });
     }
 }

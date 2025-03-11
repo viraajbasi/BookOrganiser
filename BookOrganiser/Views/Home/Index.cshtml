@@ -15,14 +15,18 @@
     <title>Index</title>
 </head>
 <body>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        Error: @TempData["Error"]
+    </div>
+}
 <h1>My Library</h1>
 <hr />
 @if (!(bool)ViewBag.HasAnyBooks)
 {
     <div class="alert alert-primary">
-        <p>
-            <strong>You currently don't have any books in your library!</strong> Click <a asp-controller="Book" asp-action="Find">here</a> to get started (or alternatively click "Add Book").
-        </p>
+        <strong>You currently don't have any books in your library!</strong> Click <a asp-controller="Book" asp-action="Find">here</a> to get started (or alternatively click "Add Book").
     </div>
 }
 @{
@@ -70,7 +74,7 @@
         {
             <h2>@textInfo.ToTitleCase(category)</h2>
             <div class="alert alert-warning">
-                <p>There are no books in this category.</p>
+                There are no books in this category.
             </div>
         }
     }
@@ -110,7 +114,7 @@
     <h1>Category Management</h1>
     <hr/>
     <div class="form-group mb-3">
-        <form asp-controller="Account" asp-action="AddCategory" method="post">
+        <form asp-controller="Home" asp-action="AddCategory" method="post">
             <div class="mb-3">
                 <label class="form-label" for="category">Custom Category:</label>
                 <input class="form-control" type="text" id="category" name="category" required/>
@@ -121,7 +125,7 @@
         </form>
     </div>
     <div class="form-group mb-3">
-        <form asp-controller="Account" asp-action="DeleteCategory" method="post">
+        <form asp-controller="Home" asp-action="DeleteCategory" method="post">
             <div class="mb-3">
                 <select for="category" name="category" class="form-select" required>
                     <option value="" disabled selected hidden>Please Choose...</option>

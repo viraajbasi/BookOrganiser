@@ -32,13 +32,13 @@ public class BookController : Controller
         
         if (id == null)
         {
-            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
+            return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
 
         var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
         if (book == null)
         {
-            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
+            return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
 
         ViewBag.Categories = user.UserCategories;
@@ -53,7 +53,7 @@ public class BookController : Controller
     {
         if (id == null)
         {
-            return RedirectToAction("Error", "Home", new { message = "Error finding object", statusCode = 404 });
+            return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
         
         var book = await _context.Books.FindAsync(id);
@@ -116,8 +116,9 @@ public class BookController : Controller
 
             return RedirectToAction("Index", "Home");
         }
-
-        return RedirectToAction("Error", "Home", new { message = "Invalid search query" });
+        
+        TempData["Error"] = $"No search results found for '{identifier}'";
+        return RedirectToAction("Find", "Book");
     }
 
     [HttpPost]
@@ -133,7 +134,7 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        return RedirectToAction("Error", "Home", new { message = $"Error adding book to category: {category}" });
+        return RedirectToAction("Error", "Home", new { message = $"Unknown error occured while adding book to category: '{category}'" });
     }
 
     [HttpPost]
@@ -149,7 +150,7 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        return RedirectToAction("Error", "Home", new { message = $"Error removing book from category: {category}" });
+        return RedirectToAction("Error", "Home", new { message = $"Unknown error occured while removing book from category: '{category}'" });
     }
     
     private static async Task<Volume?> PerformSearchQuery(string query, bool isISBN)

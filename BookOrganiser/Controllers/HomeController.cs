@@ -29,7 +29,7 @@ public class HomeController : Controller
         
         var userBooks = _context.Books.Where(e => e.UserId == user.Id).ToList();
         
-        ViewBag.HasAnyBooks = userBooks.Any();
+        ViewBag.HasAnyBooks = userBooks.Count != 0;
         ViewBag.Categories = user.UserCategories;
         
         return View(userBooks);
@@ -51,5 +51,58 @@ public class HomeController : Controller
                 StatusCode = statusCode,
                 ShowInfoText = showInfoText ?? true
             });
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddCategory(string category)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        category = category.ToLower();
+        if (user.UserCategories.Contains(category))
+        {
+            TempData["Error"] = "Category already exists.";
+            return RedirectToAction("Index", "Home");
+        }
+        
+        if (ModelState.IsValid)
+        {
+            user.UserCategories.Add(category);
+            await _context.SaveChangesAsync();
+        }
+        
+        return RedirectToAction("Error", "Home", new { message = $"Unknown error occurred whilst creating category '{category}'" });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteCategory(string category)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        var booksToUpdate = _context.Books.Where(e => e.UserAccount == user && e.CustomCategories.Contains(category));
+        
+        if (ModelState.IsValid)
+        {
+            foreach (var book in booksToUpdate)
+            {
+                book.CustomCategories.Remove(category);
+            }
+            user.UserCategories.Remove(category);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
+        }
+        
+        return RedirectToAction("Error", "Home", new { message = $"Unknown error occured whilst deleting category '{category}'" });
     }
 }

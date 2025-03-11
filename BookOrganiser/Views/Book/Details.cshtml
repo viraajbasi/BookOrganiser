@@ -176,14 +176,17 @@
 </div>
 <div>
     @{
-        var addCategories = (List<string>)ViewBag.Categories;
-        addCategories = addCategories.Except(Model.CustomCategories).ToList();
-        var removeCategories = (List<string>)ViewBag.Categories;
-        removeCategories = removeCategories.Intersect(Model.CustomCategories).ToList();
+        var allCategories = (List<string>)ViewBag.Categories;
+        var addCategories = allCategories.Except(Model.CustomCategories).ToList();
+        var removeCategories = allCategories.Intersect(Model.CustomCategories).ToList();
         if (addCategories.Any() || removeCategories.Any())
         {
             <h1>Category Management</h1>
             <hr/>
+        }
+
+        @if (addCategories.Any())
+        {
             <div class="form-group mb-3">
                 <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
                     <div class="mb-3">
@@ -201,6 +204,11 @@
                     </div>
                 </form>
             </div>
+        }
+
+
+        @if (removeCategories.Any())
+        {
             <div class="form-group mb-3">
                 <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
                     <div class="mb-3">

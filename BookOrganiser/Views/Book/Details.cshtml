@@ -219,28 +219,6 @@
             }
         </dd>
     </dl>
-    <div class="mb-3">
-        <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Delete Book From Library</button>
-    </div>
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="deleteModalLabel">Are You Sure?</h1>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this book? <strong>This action is irreversible.</strong></p>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <form asp-action="Delete">
-                        <input type="hidden" asp-for="Id"/>
-                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete Book From Library</button>
-                    </form>
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-close"></i> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <div>
     <h1>AI Summary</h1>
@@ -255,6 +233,28 @@
             To enable AI features, you must read the disclaimer and opt-in first.
         </div>
     }
+</div>
+<div class="mb-3">
+    <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Delete Book From Library</button>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="deleteModalLabel">Are You Sure?</h1>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this book? <strong>This action is irreversible.</strong></p>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id"/>
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete Book From Library</button>
+                </form>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-close"></i> Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

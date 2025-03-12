@@ -1,9 +1,7 @@
-@using System.Globalization
 @model BookOrganiser.Models.AISummary
 
 @{
     ViewData["Title"] = "Details";
-    var textInfo = new CultureInfo("en-GB", false).TextInfo;
 }
 
 <!DOCTYPE html>
@@ -27,7 +25,14 @@
                 <hr/>
                 @if ((bool)ViewBag.AIEnabled)
                 {
-                    <p>foo</p>
+                    <dl class="row">
+                        <dt>Summary</dt>
+                        <dd>@Html.DisplayFor(model => model.Summary)</dd>
+                        <dt>Key Quotes</dt>
+                        <dd>@Html.DisplayFor(model => model.KeyQuotes)</dd>
+                        <dt>Key Themes</dt>
+                        <dd>@Html.DisplayFor(model => model.KeyThemes)</dd>
+                    </dl>
                 }
                 else
                 {

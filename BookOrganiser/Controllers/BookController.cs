@@ -23,26 +23,24 @@ public class BookController : Controller
 
     public async Task<IActionResult> Details(int? id)
     {
-        var user = await _userManager.GetUserAsync(User);
-        
-        if (user == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
-        
         if (id == null)
         {
             return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
+        
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
 
-        var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
+        var book = await _context.Books.Include(book => book.AISummary).FirstOrDefaultAsync(m => m.Id == id);
         if (book == null)
         {
             return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
 
         ViewBag.Categories = user.UserCategories;
-        ViewBag.AIEnabled = user.AcceptedAIFeatures;
 
         return View(book);
     }
@@ -59,7 +57,7 @@ public class BookController : Controller
                 _context.Books.Remove(book);
             }
 
-            var aiSummary = await _context.AISummary.Where(e => e.BookId == id).FirstOrDefaultAsync();
+            var aiSummary = await _context.AISummary.FirstOrDefaultAsync(e => e.BookId == id);
             if (aiSummary != null)
             {
                 _context.AISummary.Remove(aiSummary);
@@ -118,13 +116,15 @@ public class BookController : Controller
         if (result != null && ModelState.IsValid)
         {
             var bookResponse = GoogleBooksToModel(result, user);
-            _context.Add(bookResponse);
-            
             var aiSummary = new AISummary
             {
                 BookId = bookResponse.Id,
                 Book = bookResponse,
             };
+            
+            bookResponse.AISummary = aiSummary;
+            
+            _context.Add(bookResponse);
             _context.AISummary.Add(aiSummary);
             
             

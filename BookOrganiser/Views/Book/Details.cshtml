@@ -19,11 +19,11 @@
     <div class="row">
         <div class="col-md-3 col-lg-2 sidebar-container">
             <partial>
-                @Html.Partial("_BookSideNavPartial", Model.Id)
+                @Html.Partial("_BookSideNavPartial", (BookId: Model.Id, SummaryId: Model.AISummary.Id))
             </partial>
         </div>
         <div class="col-md-9 col-lg-10 main-content">
-            <h1>Book</h1>
+            <h1>Book Details</h1>
             <hr/>
             <dl class="row">
                 @if (Model.Title != string.Empty)
@@ -155,20 +155,6 @@
                     }
                 </dd>
             </dl>
-            <div>
-                <h1>AI Summary</h1>
-                <hr/>
-                @if ((bool)ViewBag.AIEnabled)
-                {
-                    <p>foo</p>
-                }
-                else
-                {
-                    <div class="alert alert-warning">
-                        To enable AI features, you must read the disclaimer and opt-in first.
-                    </div>
-                }
-            </div>
             <div class="d-flex justify-content-between flex-wrap">
                 <div class="mb-3">
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal"><i class="bi bi-pencil-square"></i> Edit Categories</button>

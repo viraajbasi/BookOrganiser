@@ -49,21 +49,28 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int? id)
+    public async Task<IActionResult> DeleteBook(int id)
     {
-        if (id == null)
+        if (ModelState.IsValid)
         {
-            return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
+            var book = await _context.Books.FindAsync(id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+            }
+
+            var aiSummary = await _context.AISummary.Where(e => e.BookId == id).FirstOrDefaultAsync();
+            if (aiSummary != null)
+            {
+                _context.AISummary.Remove(aiSummary);
+            }
+
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index", "Home");
         }
         
-        var book = await _context.Books.FindAsync(id);
-        if (book != null)
-        {
-            _context.Books.Remove(book);
-        }
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
     }
 
     public IActionResult Find()
@@ -112,6 +119,15 @@ public class BookController : Controller
         {
             var bookResponse = GoogleBooksToModel(result, user);
             _context.Add(bookResponse);
+            
+            var aiSummary = new AISummary
+            {
+                BookId = bookResponse.Id,
+                Book = bookResponse,
+            };
+            _context.AISummary.Add(aiSummary);
+            
+            
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Home");

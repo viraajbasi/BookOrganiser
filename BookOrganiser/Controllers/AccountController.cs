@@ -165,34 +165,40 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
+        if (ModelState.IsValid)
         {
-            return RedirectToAction("Login", "Account");
-        }
-        
-        var verifyOldPassword = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
-        if (!verifyOldPassword)
-        {
-            ModelState.AddModelError(string.Empty, "Current password is incorrect.");
-            return View(model);
-        }
-        
-        var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-        if (!changePasswordResult.Succeeded)
-        {
-            foreach (var error in changePasswordResult.Errors)
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                return RedirectToAction("Login", "Account");
             }
+
+            var verifyOldPassword = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!verifyOldPassword)
+            {
+                ModelState.AddModelError(string.Empty, "Current password is incorrect.");
+                return View(model);
+            }
+
+            var changePasswordResult =
+                await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                return View(model);
+            }
+
+            await _userManager.UpdateSecurityStampAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
             
-            return View(model);
+            return RedirectToAction("ConfirmPasswordChange", "Account");
         }
-        
-        await _userManager.UpdateSecurityStampAsync(user);
-        await _signInManager.RefreshSignInAsync(user);
-        
-        return RedirectToAction("ConfirmPasswordChange", "Account");
+
+        return View(model);
     }
 
     public IActionResult ConfirmPasswordChange()

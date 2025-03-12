@@ -27,11 +27,11 @@
                 {
                     <dl class="row">
                         <dt>Summary</dt>
-                        <dd>@Html.DisplayFor(model => model.Summary)</dd>
+                        <dd>@Html.Raw(Model.Summary)</dd>
                         <dt>Key Quotes</dt>
-                        <dd>@Html.DisplayFor(model => model.KeyQuotes)</dd>
+                        <dd>@Html.Raw(Model.KeyQuotes)</dd>
                         <dt>Key Themes</dt>
-                        <dd>@Html.DisplayFor(model => model.KeyThemes)</dd>
+                        <dd>@Html.Raw(Model.KeyThemes)</dd>
                     </dl>
                 }
                 else

@@ -22,9 +22,17 @@ public class OllamaService : IAIService
     {
         var authors = string.Join(',', book.Authors);
         var categories = string.Join(',', book.GoogleBooksCategories);
-        var prompt = $"Generate a concise summary for the book title: '{book.Title}' by '{authors}'." + 
-                     $"The book is in the following categories: '{categories}' and was published on {book.PublishedDate}." +
-                     $"If available, consider these details from the description: {book.Description}.";
+        var prompt = $"""
+                     Summarise the book: {book.Title} by {authors} in 250 words or less.
+                     According to Google Books, the book is in the following categories: {categories}.
+                     You MUST use the following html structure:
+                     
+                     <p>[PROVIDE A CLEAR, CHRONOLOGICAL SUMMARY OF THE MAIN PLOT EVENTS]</p>
+                     
+                     Provide ONLY this information.
+                     If you cannot provide at least 10 quotes, respond EXACTLY with "Sorry, I am unable to provide a summary for you." and NOTHING ELSE.
+                     Provide ONLY the complete HTML structure without any explanation, introduction, or commentary.
+                     """;
 
         return await GenerateResponseAsync(prompt);
     }
@@ -33,9 +41,30 @@ public class OllamaService : IAIService
     {
         var authors = string.Join(',', book.Authors);
         var categories = string.Join(',', book.GoogleBooksCategories);
-        var prompt = $"Generate ten key quotes from the book: '{book.Title}' by '{authors}'." + 
-                     $"The book is in the following categories: '{categories}' and was published on {book.PublishedDate}." +
-                     $"If available, consider these details from the description: {book.Description}.";
+        var prompt = $"""
+                      Provide at least 10 key quotes from the book: {book.Title} by {authors}.
+                      According to Google Books, the book is in the following categories: {categories}.
+                      You MUST use the following HTML structure:
+                      
+                      <ol class="quotes-list">
+                        <li class="quote-item">
+                          <blockquote class="quote-text">"[QUOTE 1]"</blockquote>
+                          <p class="quote-context">[BRIEF CONTEXT - 10 WORDS MAX]</p>
+                        </li>
+                        <li class="quote-item">
+                          <blockquote class="quote-text">"[QUOTE 2]"</blockquote>
+                          <p class="quote-context">[BRIEF CONTEXT - 10 WORDS MAX]</p>
+                        </li>
+                        <!-- Continue pattern for quotes 3-10 -->
+                      </ol>
+
+                      Provide ONLY this information.
+                      Do NOT provide more than 10 quotes.
+                      Each quote should be significant to the book's themes, plot, or character development.
+                      Use direct quotes with proper punctuation.
+                      If you cannot provide at least 10 quotes, respond EXACTLY with "Sorry, I am unable to provide a 10 key quotes for you." and NOTHING ELSE.
+                      Provide ONLY the complete HTML structure without any explanation, introduction, or commentary.
+                      """;
         
         return await GenerateResponseAsync(prompt);
     }
@@ -44,9 +73,37 @@ public class OllamaService : IAIService
     {
         var authors = string.Join(',', book.Authors);
         var categories = string.Join(',', book.GoogleBooksCategories);
-        var prompt = $"Summarise the key themes from the book: '{book.Title}' by '{authors}'." + 
-                     $"The book is in the following categories: '{categories}' and was published on {book.PublishedDate}." +
-                     $"If available, consider these details from the description: {book.Description}.";
+        var prompt = $"""
+                      Provide at least 3 key themes from the book: {book.Title} by {authors}.
+                      According to Google Books, the book is in the following categories: {categories}.
+                      You MUST use the following HTML structure:
+
+                      <ul class="themes-list">
+                        <li class="theme-item">
+                          <h3 class="theme-title">[THEME 1 TITLE]</h3>
+                          <p class="theme-explanation">[BRIEF EXPLANATION OF THEME 1 - 50 WORDS MAX]</p>
+                          <p class="theme-evidence">Evidence: [SPECIFIC EXAMPLE FROM THE BOOK - 30 WORDS MAX]</p>
+                        </li>
+                        <li class="theme-item">
+                          <h3 class="theme-title">[THEME 2 TITLE]</h3>
+                          <p class="theme-explanation">[BRIEF EXPLANATION OF THEME 2 - 50 WORDS MAX]</p>
+                          <p class="theme-evidence">Evidence: [SPECIFIC EXAMPLE FROM THE BOOK - 30 WORDS MAX]</p>
+                        </li>
+                        <li class="theme-item">
+                          <h3 class="theme-title">[THEME 3 TITLE]</h3>
+                          <p class="theme-explanation">[BRIEF EXPLANATION OF THEME 3 - 50 WORDS MAX]</p>
+                          <p class="theme-evidence">Evidence: [SPECIFIC EXAMPLE FROM THE BOOK - 30 WORDS MAX]</p>
+                        </li>
+                      </ul>
+                        
+                      Provide ONLY this information.
+                      Do NOT provide more than 3 themes.
+                      Each theme should be significant and central to the book's meaning
+                      Provide a brief explanation for each theme (50 words maximum)
+                      Include one specific example from the book that illustrates each theme (30 words maximum)
+                      If you cannot provide at least 10 quotes, respond EXACTLY with "Sorry, I am unable to provide a 3 key themes for you." and NOTHING ELSE.
+                      Provide ONLY the complete HTML structure without any explanation, introduction, or commentary.
+                      """;
         
         return await GenerateResponseAsync(prompt);
     }

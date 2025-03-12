@@ -18,7 +18,9 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3 col-lg-2 sidebar-container">
-            @Html.Partial("_BookSideNavPartial", Model.Id)
+            <partial>
+                @Html.Partial("_BookSideNavPartial", Model.Id)
+            </partial>
         </div>
         <div class="col-md-9 col-lg-10 main-content">
             <h1>Book</h1>

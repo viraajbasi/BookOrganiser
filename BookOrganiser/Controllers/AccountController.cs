@@ -156,8 +156,16 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult ChangePassword()
+    public async Task<IActionResult> ChangePassword()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        ViewBag.Email = user.Email;
+        
         return View();
     }
 

@@ -1,13 +1,18 @@
 @using BookOrganiser.Models
 @using Microsoft.AspNetCore.Identity;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@inject SignInManager<UserAccount> signInManager;
+@inject SignInManager<UserAccount> SignInManager;
+@inject UserManager<UserAccount> UserManager;
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
 
 <ul class="navbar-nav ms-auto">
-    @if (signInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="ChangePassword"><i class="bi bi-person-circle"></i> @User.Identity!.Name</a>
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="ChangePassword"><i class="bi bi-person-circle"></i> @user!.FullName</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout"><i class="bi bi-box-arrow-right"></i> Logout</a>

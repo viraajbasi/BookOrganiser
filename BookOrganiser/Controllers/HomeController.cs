@@ -49,6 +49,7 @@ public class HomeController : Controller
         }
         
         ViewBag.Categories = user.UserCategories;
+        ViewBag.HasAnyCategories = user.UserCategories.Count > 0;
         
         return View();
     }

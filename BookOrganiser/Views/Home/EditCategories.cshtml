@@ -18,7 +18,7 @@
             <div class="form-group mb-3">
                 <form asp-controller="Home" asp-action="AddCategory" method="post">
                     <div class="mb-3">
-                        <label class="form-label" for="category">Custom Category:</label>
+                        <label class="form-label" for="category">Add Category</label>
                         <input class="form-control" type="text" id="category" name="category" required/>
                     </div>
                     <div class="mb-3">
@@ -26,22 +26,32 @@
                     </div>
                 </form>
             </div>
-            <div class="form-group mb-3">
-                <form asp-controller="Home" asp-action="DeleteCategory" method="post">
-                    <div class="mb-3">
-                        <select for="category" name="category" class="form-select" required>
-                            <option value="" disabled selected hidden>Please Choose...</option>
-                            @foreach (var item in (List<string>)ViewBag.Categories)
-                            {
-                                <option value="@item">@textInfo.ToTitleCase(item)</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-danger"><i class="bi bi-dash-lg"></i> Delete Category</button>
-                    </div>
-                </form>
-            </div>
+            @if ((bool)ViewBag.HasAnyCategories)
+            {
+                <div class="form-group mb-3">
+                    <form asp-controller="Home" asp-action="DeleteCategory" method="post">
+                        <div class="mb-3">
+                            <label class="form-label" for="category">Delete Category</label>
+                            <select for="category" name="category" class="form-select" required>
+                                <option value="" disabled selected hidden>Please Choose...</option>
+                                @foreach (var item in (List<string>)ViewBag.Categories)
+                                {
+                                    <option value="@item">@textInfo.ToTitleCase(item)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-danger"><i class="bi bi-dash-lg"></i> Delete Category</button>
+                        </div>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    You haven't added any categories yet!
+                </div>
+            }
         </div>
     </div>
 </body>

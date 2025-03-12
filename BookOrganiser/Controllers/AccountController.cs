@@ -213,4 +213,43 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    public async Task<IActionResult> AIFeatures()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        ViewBag.AIEnabled = user.AcceptedAIFeatures;
+        
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ManageAIRegistration(bool choice)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (ModelState.IsValid)
+        {
+            user.AcceptedAIFeatures = choice;
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("ConfirmAIChoice", "Account");
+        }
+        
+        return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred" });
+    }
+
+    public IActionResult ConfirmAIChoice()
+    {
+        return View();
+    }
 }

@@ -60,6 +60,30 @@ body {
   opacity: 0.9;
 }
 
+.custom-box-alert {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  max-width: 500px;
+  width: 100%;
+  opacity: 0.9;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.custom-box-alert .alert {
+  margin: 0;
+  width: 100%;
+}
+
+.custom-box-alert button {
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
 .bookshelf-container {
   width: 100%;
   overflow-x: auto;

@@ -1,0 +1,52 @@
+@using BookOrganiser.ViewModels.Account
+
+@{
+    ViewData["Title"] = "Manage AI Features";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Manage AI Features</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 sidebar-container">
+            <partial>
+                @Html.Partial("_AccountSideNavPartial")
+            </partial>
+        </div>
+        <div class="col-md-9 col-lg-10 main-content">
+            <h1>Manage AI Features</h1>
+            <hr/>
+            <div class="centered-container">
+                <div class="custom-box-alert">
+                    @if ((bool)ViewBag.AIEnabled)
+                    {
+                        <alert class="alert alert-warning">
+                            AI features are currently <strong>enabled</strong>. If you wish to disable them, click the button below.
+                        </alert>
+                        <form asp-controller="Account" asp-action="ManageAIRegistration" method="post">
+                            <input type="hidden" name="choice" value="false"/>
+                            <button class="btn btn-danger"><i class="bi bi-x-lg"></i> Disable AI Features</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <alert class="alert alert-warning">
+                            AI features are currently <strong>disabled</strong>. If you wish to enable them, click the button below.
+                        </alert>
+                        <form asp-controller="Account" asp-action="ManageAIRegistration" method="post">
+                            <input type="hidden" name="choice" value="true"/>
+                            <button class="btn btn-success"><i class="bi bi-check-lg"></i> Enable AI Features</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

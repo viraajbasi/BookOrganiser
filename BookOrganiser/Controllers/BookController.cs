@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
 using BookOrganiser.Models;
+using BookOrganiser.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 

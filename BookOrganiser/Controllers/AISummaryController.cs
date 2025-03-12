@@ -1,5 +1,6 @@
 using BookOrganiser.Data;
 using BookOrganiser.Models;
+using BookOrganiser.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,13 @@ public class AISummaryController : Controller
 {
     private readonly AppDbContext _context;
     private readonly UserManager<UserAccount> _userManager;
+    private readonly IAIService _aiService;
 
-    public AISummaryController(AppDbContext context, UserManager<UserAccount> userManager)
+    public AISummaryController(AppDbContext context, UserManager<UserAccount> userManager, IAIService aiService)
     {
         _context = context;
         _userManager = userManager;
+        _aiService = aiService;
     }
     
     public async Task<IActionResult> Summary(int? id)
@@ -36,6 +39,15 @@ public class AISummaryController : Controller
         if (summary == null)
         {
             return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
+        }
+
+        if (summary.Summary == string.Empty || summary.KeyQuotes == string.Empty || summary.Summary == string.Empty)
+        {
+            summary.Summary = await _aiService.GenerateBookSummaryAsync(summary.Book);
+            summary.KeyQuotes = await _aiService.GenerateKeyQuotesAsync(summary.Book);
+            summary.KeyThemes = await _aiService.GenerateKeyThemesAsync(summary.Book);
+            
+            await _context.SaveChangesAsync();
         }
         
         ViewBag.AIEnabled = user.AcceptedAIFeatures;

@@ -1,5 +1,7 @@
 using BookOrganiser.Data;
 using BookOrganiser.Models;
+using BookOrganiser.Services;
+using BookOrganiser.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,6 +26,11 @@ builder.Services.AddIdentity<UserAccount, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddHttpClient<IAIService, OllamaService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:11434");
+});
 
 var app = builder.Build();
 

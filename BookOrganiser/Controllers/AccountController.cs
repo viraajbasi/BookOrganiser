@@ -155,4 +155,48 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
+
+    public IActionResult ChangePassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        var verifyOldPassword = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+        if (!verifyOldPassword)
+        {
+            ModelState.AddModelError(string.Empty, "Current password is incorrect.");
+            return View(model);
+        }
+        
+        var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        if (!changePasswordResult.Succeeded)
+        {
+            foreach (var error in changePasswordResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            
+            return View(model);
+        }
+        
+        await _userManager.UpdateSecurityStampAsync(user);
+        await _signInManager.RefreshSignInAsync(user);
+        
+        return RedirectToAction("ConfirmPasswordChange", "Account");
+    }
+
+    public IActionResult ConfirmPasswordChange()
+    {
+        return View();
+    }
 }

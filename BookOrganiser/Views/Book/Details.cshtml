@@ -15,243 +15,246 @@
     <title>Details</title>
 </head>
 <body>
-<div class="mb-3">
-    <form asp-controller="Home" asp-action="Index" method="get">
-        <button type="submit" class="btn btn-success"><i class="bi bi-arrow-left"></i> Back</button>
-    </form>
-</div>
-<div class="mb-3">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal"><i class="bi bi-pencil-square"></i> Edit Categories</button>
-</div>
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            @{
-                var allCategories = (List<string>)ViewBag.Categories;
-                var addCategories = allCategories.Except(Model.CustomCategories).ToList();
-                var removeCategories = allCategories.Intersect(Model.CustomCategories).ToList();
-
-                <div class="modal-header">
-                    <h1>Category Management</h1>
-                </div>
-
-                <div class="modal-body">
-                    @if (addCategories.Any())
-                    {
-                        <div class="form-group mb-3">
-                            <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
-                                <div class="mb-3">
-                                    <select for="category" name="category" class="form-select" required>
-                                        <option value="" disabled selected hidden>Please Choose...</option>
-                                        @foreach (var item in addCategories)
-                                        {
-                                            <option value="@item">@textInfo.ToTitleCase(item)</option>
-                                        }
-                                    </select>
-                                </div>
-                                <input type="hidden" name="id" value="@Model.Id"/>
-                                <div class="mb-3">
-                                    <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book to Category</button>
-                                </div>
-                            </form>
-                        </div>
-                    }
-
-
-                    @if (removeCategories.Any())
-                    {
-                        <div class="form-group mb-3">
-                            <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
-                                <div class="mb-3">
-                                    <select for="category" name="category" class="form-select" required>
-                                        <option value="" disabled selected hidden>Please Choose...</option>
-                                        @foreach (var item in removeCategories)
-                                        {
-                                            <option value="@item">@textInfo.ToTitleCase(item)</option>
-                                        }
-                                    </select>
-                                </div>
-                                <input type="hidden" name="id" value="@Model.Id"/>
-                                <div class="mb-3">
-                                    <button type="submit" class="btn btn-danger"><i class="bi bi-dash-lg"></i> Remove Book from Category</button>
-                                </div>
-                            </form>
-                        </div>
-                    }
-                </div>
-            }
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Close</button>
-            </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 sidebar-container">
+            @Html.Partial("_BookSideNavPartial", Model.Id)
         </div>
-    </div>
-</div>
-<div>
-    <h1>Book</h1>
-    <hr/>
-    <dl class="row">
-        @if (Model.Title != string.Empty)
-        {
-            <dt class="col-sm-2">
-                Title
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-        }
-        @if (Model.Subtitle != string.Empty)
-        {
-            <dt class="col-sm-2">
-                Subtitle
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Subtitle)
-            </dd>
-        }
-        @if (Model.Authors.Any())
-        {
-            <dt class="col-sm-2">
-                Author(s)
-            </dt>
-            <dd class="col-sm-10">
-                @string.Join(", ", Model.Authors)
-            </dd>
-        }
-        @if (Model.Publisher != string.Empty)
-        {
-            <dt class="col-sm-2">
-                Publisher
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Publisher)
-            </dd>
-        }
-        @if (Model.PublishedDate != string.Empty)
-        {
-            <dt class="col-sm-2">
-                Year Published
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.PublishedDate)
-            </dd>
-        }
-        @if (Model.Description != string.Empty)
-        {
-            <dt class="col-sm-2">
-                Description
-            </dt>
-            <dd class="col-sm-10">
-                @Html.Raw(Model.Description)
-            </dd>
-        }
-        @if (Model.ISBN10 != string.Empty)
-        {
-            <dt class="col-sm-2">
-                ISBN-10
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ISBN10)
-            </dd>
-        }
-        @if (Model.ISBN13 != string.Empty)
-        {
-            <dt class="col-sm-2">
-                ISBN-13
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ISBN13)
-            </dd>
-        }
-        @if (Model.ISSN != string.Empty)
-        {
-            <dt class="col-sm-2">
-                ISSN
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ISSN)
-            </dd>
-        }
-        @if (Model.OtherIdentifier != string.Empty)
-        {
-            <dt class="col-sm-2">
-                Other Identifier
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.OtherIdentifier)
-            </dd>
-        }
-        <dt class="col-sm-2">
-            Page Count
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PageCount)
-        </dd>
-        @if (Model.GoogleBooksCategories.Any())
-        {
-            <dt class="col-sm-2">
-                Categories
-            </dt>
-            <dd class="col-sm-10">
-                @string.Join(", ", Model.GoogleBooksCategories)
-            </dd>
-        }
-        @if (Model.CustomCategories.Any())
-        {
-            <dt class="col-sm-2">
-                Custom Categories
-            </dt>
-            <dd class="col-sm-10">
-                @textInfo.ToTitleCase(string.Join(", ", Model.CustomCategories))
-            </dd>
-        }
-        @{ var thumbnail = (Model.Thumbnail != string.Empty) ? Model.Thumbnail : Model.SmallThumbnail; }
-        <dt class="col-sm-2">
-            Thumbnail
-        </dt>
-        <dd class="col-sm-10">
-            @if (thumbnail != string.Empty)
-            {
-                <img src="@thumbnail" alt="Thumbnail for @Model.Title."/>
-            }
-            else
-            {
-                <img src="~/images/no-cover.jpg" alt="No thumbnail available for @Model.Title." width="130" height="170"/>
-            }
-        </dd>
-    </dl>
-</div>
-<div>
-    <h1>AI Summary</h1>
-    <hr/>
-    @if ((bool)ViewBag.AIEnabled)
-    {
-        <p>foo</p>
-    }
-    else
-    {
-        <div class="alert alert-warning">
-            To enable AI features, you must read the disclaimer and opt-in first.
-        </div>
-    }
-</div>
-<div class="mb-3">
-    <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Delete Book From Library</button>
-</div>
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title" id="deleteModalLabel">Are You Sure?</h1>
+        <div class="col-md-9 col-lg-10 main-content">
+            <h1>Book</h1>
+            <hr/>
+            <dl class="row">
+                @if (Model.Title != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        Title
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                }
+                @if (Model.Subtitle != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        Subtitle
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Subtitle)
+                    </dd>
+                }
+                @if (Model.Authors.Any())
+                {
+                    <dt class="col-sm-2">
+                        Author(s)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @string.Join(", ", Model.Authors)
+                    </dd>
+                }
+                @if (Model.Publisher != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        Publisher
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Publisher)
+                    </dd>
+                }
+                @if (Model.PublishedDate != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        Year Published
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.PublishedDate)
+                    </dd>
+                }
+                @if (Model.Description != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        Description
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.Raw(Model.Description)
+                    </dd>
+                }
+                @if (Model.ISBN10 != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        ISBN-10
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ISBN10)
+                    </dd>
+                }
+                @if (Model.ISBN13 != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        ISBN-13
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ISBN13)
+                    </dd>
+                }
+                @if (Model.ISSN != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        ISSN
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ISSN)
+                    </dd>
+                }
+                @if (Model.OtherIdentifier != string.Empty)
+                {
+                    <dt class="col-sm-2">
+                        Other Identifier
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.OtherIdentifier)
+                    </dd>
+                }
+                <dt class="col-sm-2">
+                    Page Count
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PageCount)
+                </dd>
+                @if (Model.GoogleBooksCategories.Any())
+                {
+                    <dt class="col-sm-2">
+                        Categories
+                    </dt>
+                    <dd class="col-sm-10">
+                        @string.Join(", ", Model.GoogleBooksCategories)
+                    </dd>
+                }
+                @if (Model.CustomCategories.Any())
+                {
+                    <dt class="col-sm-2">
+                        Custom Categories
+                    </dt>
+                    <dd class="col-sm-10">
+                        @textInfo.ToTitleCase(string.Join(", ", Model.CustomCategories))
+                    </dd>
+                }
+                @{ var thumbnail = (Model.Thumbnail != string.Empty) ? Model.Thumbnail : Model.SmallThumbnail; }
+                <dt class="col-sm-2">
+                    Thumbnail
+                </dt>
+                <dd class="col-sm-10">
+                    @if (thumbnail != string.Empty)
+                    {
+                        <img src="@thumbnail" alt="Thumbnail for @Model.Title."/>
+                    }
+                    else
+                    {
+                        <img src="~/images/no-cover.jpg" alt="No thumbnail available for @Model.Title." width="130" height="170"/>
+                    }
+                </dd>
+            </dl>
+            <div>
+                <h1>AI Summary</h1>
+                <hr/>
+                @if ((bool)ViewBag.AIEnabled)
+                {
+                    <p>foo</p>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        To enable AI features, you must read the disclaimer and opt-in first.
+                    </div>
+                }
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this book? <strong>This action is irreversible.</strong></p>
-            </div>
-            <div class="modal-footer d-flex justify-content-between">
-                <form asp-action="Delete">
-                    <input type="hidden" asp-for="Id"/>
-                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete Book From Library</button>
-                </form>
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-close"></i> Close</button>
+            <div class="d-flex justify-content-between flex-wrap">
+                <div class="mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal"><i class="bi bi-pencil-square"></i> Edit Categories</button>
+                </div>
+                <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            @{
+                                var allCategories = (List<string>)ViewBag.Categories;
+                                var addCategories = allCategories.Except(Model.CustomCategories).ToList();
+                                var removeCategories = allCategories.Intersect(Model.CustomCategories).ToList();
+
+                                <div class="modal-header">
+                                    <h1>Category Management</h1>
+                                </div>
+
+                                <div class="modal-body">
+                                    @if (addCategories.Any())
+                                    {
+                                        <div class="form-group mb-3">
+                                            <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
+                                                <div class="mb-3">
+                                                    <select for="category" name="category" class="form-select" required>
+                                                        <option value="" disabled selected hidden>Please Choose...</option>
+                                                        @foreach (var item in addCategories)
+                                                        {
+                                                            <option value="@item">@textInfo.ToTitleCase(item)</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <input type="hidden" name="id" value="@Model.Id"/>
+                                                <div class="mb-3">
+                                                    <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book to Category</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    }
+
+
+                                    @if (removeCategories.Any())
+                                    {
+                                        <div class="form-group mb-3">
+                                            <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
+                                                <div class="mb-3">
+                                                    <select for="category" name="category" class="form-select" required>
+                                                        <option value="" disabled selected hidden>Please Choose...</option>
+                                                        @foreach (var item in removeCategories)
+                                                        {
+                                                            <option value="@item">@textInfo.ToTitleCase(item)</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <input type="hidden" name="id" value="@Model.Id"/>
+                                                <div class="mb-3">
+                                                    <button type="submit" class="btn btn-danger"><i class="bi bi-dash-lg"></i> Remove Book from Category</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    }
+                                </div>}
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Delete Book From Library</button>
+                </div>
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title" id="deleteModalLabel">Are You Sure?</h1>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this book? <strong>This action is irreversible.</strong></p>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <form asp-action="Delete">
+                                    <input type="hidden" asp-for="Id"/>
+                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete Book From Library</button>
+                                </form>
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-close"></i> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

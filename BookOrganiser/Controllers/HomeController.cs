@@ -43,8 +43,8 @@ public class HomeController : Controller
         {
             return RedirectToAction("Login", "Account");
         }
-
-        ViewBag.Categories = user.UserCategories.Remove("Favourites");
+        
+        ViewBag.Categories = user.UserCategories.Remove("favourites");
         ViewBag.HasAnyCategories = user.UserCategories.Count > 0;
 
         return View();

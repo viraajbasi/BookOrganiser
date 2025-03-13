@@ -163,6 +163,13 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
+        var alreadyInDb = _context.Books.Any(e => e.UpstreamId == id);
+        if (alreadyInDb)
+        {
+            TempData["Error"] = $"This book is already in your library.";
+            return RedirectToAction("FindBooksTitle", "Book");
+        }
+        
         var result = await _booksService.GetBookByUpstreamId(id, user);
         
         if (result != null && ModelState.IsValid)

@@ -45,33 +45,7 @@ public class BookController : Controller
 
         return View(book);
     }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteBook(int id)
-    {
-        if (ModelState.IsValid)
-        {
-            var book = await _context.Books.FindAsync(id);
-            if (book != null)
-            {
-                _context.Books.Remove(book);
-            }
-
-            var aiSummary = await _context.AISummary.FirstOrDefaultAsync(e => e.BookId == id);
-            if (aiSummary != null)
-            {
-                _context.AISummary.Remove(aiSummary);
-            }
-
-            await _context.SaveChangesAsync();
-            
-            return RedirectToAction("Index", "Home");
-        }
-        
-        return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
-    }
-
+    
     public IActionResult FindBooks()
     {
         return View();
@@ -122,6 +96,32 @@ public class BookController : Controller
         
         TempData["Error"] = $"No search results found for '{isbn}'";
         return RedirectToAction("Find", "Book");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        if (ModelState.IsValid)
+        {
+            var book = await _context.Books.FindAsync(id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+            }
+
+            var aiSummary = await _context.AISummary.FirstOrDefaultAsync(e => e.BookId == id);
+            if (aiSummary != null)
+            {
+                _context.AISummary.Remove(aiSummary);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
     }
 
     [HttpPost]

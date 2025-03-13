@@ -25,6 +25,68 @@ public class AccountController : Controller
     {
         return View();
     }
+    
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Home");
+    }
+
+    public IActionResult VerifyEmail()
+    {
+        return View();
+    }
+    
+    public IActionResult ForgotPassword(string username)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            return RedirectToAction("VerifyEmail", "Account");
+        }
+
+        return View(new ForgotPasswordViewModel { Email = username });
+    }
+
+    public async Task<IActionResult> ChangePassword()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        ViewBag.Email = user.Email;
+        
+        return View();
+    }
+
+    public IActionResult ConfirmPasswordChange()
+    {
+        return View();
+    }
+
+    public async Task<IActionResult> AIFeatures()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        ViewBag.AIEnabled = user.AcceptedAIFeatures;
+        
+        return View();
+    }
+    
+    public IActionResult ConfirmAIChoice()
+    {
+        return View();
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -38,17 +100,12 @@ public class AccountController : Controller
             {
                 return RedirectToAction("Index", "Home");
             }
-            
+
             ModelState.AddModelError(string.Empty, "Email or password is incorrect.");
             return View(model);
         }
 
         return View(model);
-    }
-
-    public IActionResult Register()
-    {
-        return View();
     }
 
     [HttpPost]
@@ -81,12 +138,7 @@ public class AccountController : Controller
 
         return View(model);
     }
-
-    public IActionResult VerifyEmail()
-    {
-        return View();
-    }
-
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
@@ -104,16 +156,6 @@ public class AccountController : Controller
         }
 
         return View(model);
-    }
-
-    public IActionResult ForgotPassword(string username)
-    {
-        if (string.IsNullOrEmpty(username))
-        {
-            return RedirectToAction("VerifyEmail", "Account");
-        }
-
-        return View(new ForgotPasswordViewModel { Email = username });
     }
 
     [HttpPost]
@@ -150,25 +192,6 @@ public class AccountController : Controller
         return View(model);
     }
 
-    public async Task<IActionResult> Logout()
-    {
-        await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
-    }
-
-    public async Task<IActionResult> ChangePassword()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
-        
-        ViewBag.Email = user.Email;
-        
-        return View();
-    }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -202,29 +225,11 @@ public class AccountController : Controller
 
             await _userManager.UpdateSecurityStampAsync(user);
             await _signInManager.RefreshSignInAsync(user);
-            
+
             return RedirectToAction("ConfirmPasswordChange", "Account");
         }
 
         return View(model);
-    }
-
-    public IActionResult ConfirmPasswordChange()
-    {
-        return View();
-    }
-
-    public async Task<IActionResult> AIFeatures()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
-
-        ViewBag.AIEnabled = user.AcceptedAIFeatures;
-        
-        return View();
     }
 
     [HttpPost]
@@ -241,15 +246,10 @@ public class AccountController : Controller
         {
             user.AcceptedAIFeatures = choice;
             await _context.SaveChangesAsync();
-            
+
             return RedirectToAction("ConfirmAIChoice", "Account");
         }
-        
-        return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred" });
-    }
 
-    public IActionResult ConfirmAIChoice()
-    {
-        return View();
+        return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred" });
     }
 }

@@ -35,11 +35,7 @@ public class HomeController : Controller
         return View(userBooks);
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
+    [Authorize]
     public async Task<IActionResult> EditCategories()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -47,10 +43,15 @@ public class HomeController : Controller
         {
             return RedirectToAction("Login", "Account");
         }
-        
+
         ViewBag.Categories = user.UserCategories;
         ViewBag.HasAnyCategories = user.UserCategories.Count > 0;
-        
+
+        return View();
+    }
+
+    public IActionResult Privacy()
+    {
         return View();
     }
 

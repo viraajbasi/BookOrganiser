@@ -148,24 +148,24 @@ public class OllamaService : IAIService
     private class OllamaChatResponse
     {
         [JsonProperty("message")]
-        public ChatMessage Message { get; set; }
+        public ChatMessage? Message { get; set; }
     
         [JsonProperty("model")]
-        public string Model { get; set; }
+        public string? Model { get; set; }
 
         [JsonProperty("created_at")]
-        public string CreatedAt { get; set; }
+        public string? CreatedAt { get; set; }
 
         [JsonProperty("done")]
-        public bool Done { get; set; }
+        public bool? Done { get; set; }
     }
 
     private class ChatMessage
     {
         [JsonProperty("role")]
-        public string Role { get; set; }
+        public string? Role { get; set; }
     
         [JsonProperty("content")]
-        public string Content { get; set; }
+        public string? Content { get; set; }
     }
 }

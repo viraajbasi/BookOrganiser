@@ -74,6 +74,7 @@ public class BookController : Controller
         if (resultsJson != null)
         {
             var books = JsonSerializer.Deserialize<List<Book>>(resultsJson);
+            HttpContext.Session.Remove("SearchResults");
             
             return View(books);
         }
@@ -123,7 +124,7 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddBookISBN(string isbn)
+    public async Task<IActionResult> FindBooksISBN(string isbn)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -131,28 +132,14 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
-        var result = await _booksService.GetBookByISBNAsync(isbn, user);
-        
-        if (result != null && ModelState.IsValid)
-        {
-            var aiSummary = new AISummary
-            {
-                BookId = result.Id,
-                Book = result,
-            };
-            
-            result.AISummary = aiSummary;
-            
-            _context.Add(result);
-            _context.AISummary.Add(aiSummary);
-            
-            await _context.SaveChangesAsync();
+        var results = await _booksService.GetBooksByISBNAsync(isbn, user);
 
-            return RedirectToAction("Index", "Home");
+        if (results != null)
+        {
+            HttpContext.Session.SetString("SearchResults", JsonSerializer.Serialize(results));
         }
-        
-        TempData["Error"] = $"No search results found for '{isbn}'";
-        return RedirectToAction("FindBooksTitle", "Book");
+
+        return RedirectToAction("SearchResults", "Book");
     }
     
     [HttpPost]

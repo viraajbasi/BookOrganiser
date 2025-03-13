@@ -14,23 +14,6 @@ public class GoogleBooksService : IBooksService
         _booksService = new BooksService();
     }
 
-    public async Task<Book?> GetBookByISBNAsync(string isbn, UserAccount user)
-    {
-        var request = _booksService.Volumes.List($"isbn:{isbn}");
-        request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-        request.Fields = "items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
-        request.MaxResults = 1;
-        
-        var response = await request.ExecuteAsync();
-
-        if (response.Items != null && response.Items.Count > 0)
-        {
-            return ConvertToBookModel(response.Items.ToList()[0], user);
-        }
-
-        return null;
-    }
-
     public async Task<Book?> GetBookByUpstreamId(string id, UserAccount user)
     {
         var request = _booksService.Volumes.Get($"{id}");
@@ -41,6 +24,34 @@ public class GoogleBooksService : IBooksService
         if (response != null)
         {
             return ConvertToBookModel(response, user);
+        }
+
+        return null;
+    }
+    
+    public async Task<List<Book>?> GetBooksByISBNAsync(string isbn, UserAccount user)
+    {
+        var request = _booksService.Volumes.List($"isbn:{isbn}");
+        request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
+        request.Fields = "items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
+        request.MaxResults = 40;
+        
+        var response = await request.ExecuteAsync();
+
+        if (response.Items != null && response.Items.Count > 0)
+        {
+            var books = response.Items.ToList();
+            var booksToReturn = new List<Book>();
+
+            foreach (var book in books)
+            {
+                if (book != null)
+                {
+                    booksToReturn.Add(ConvertToBookModel(book, user));
+                }
+            }
+            
+            return booksToReturn;
         }
 
         return null;
@@ -62,7 +73,10 @@ public class GoogleBooksService : IBooksService
 
             foreach (var book in books)
             {
-                booksToReturn.Add(ConvertToBookModel(book, user));
+                if (book != null)
+                {
+                    booksToReturn.Add(ConvertToBookModel(book, user));
+                }
             }
             
             return booksToReturn;
@@ -75,8 +89,7 @@ public class GoogleBooksService : IBooksService
     {
         var request = _booksService.Volumes.List($"inauthor:{author}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-        request.Fields =
-            "items(id,volumeInfo(title,authors,publisher,publishedDate,description,industryIdentifiers,imageLinks(thumbnail)))";
+        request.Fields = "items(id,volumeInfo(title,authors,publisher,publishedDate,description,industryIdentifiers,imageLinks(thumbnail)))";
         request.MaxResults = 40;
 
         var response = await request.ExecuteAsync();
@@ -88,7 +101,10 @@ public class GoogleBooksService : IBooksService
 
             foreach (var book in books)
             {
-                booksToReturn.Add(ConvertToBookModel(book, user));
+                if (book != null)
+                {
+                    booksToReturn.Add(ConvertToBookModel(book, user));
+                }
             }
 
             return booksToReturn;

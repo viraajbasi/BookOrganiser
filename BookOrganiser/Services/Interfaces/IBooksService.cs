@@ -6,4 +6,5 @@ public interface IBooksService
 {
     Task<Book?> GetBookByISBNAsync(string isbn, UserAccount user);
     Task<List<Book>?> GetBooksByTitleAsync(string title, UserAccount user);
+    Task<List<Book>?> GetBooksByAuthorAsync(string author, UserAccount user);
 }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BookOrganiser.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,12 +47,43 @@ public class BookController : Controller
         return View(book);
     }
     
-    public IActionResult FindBooks()
+    public IActionResult FindBooksTitle()
     {
         return View();
     }
 
-    public async Task<IActionResult> SearchResults(string title)
+    public IActionResult FindBooksAuthor()
+    {
+        return View();
+    }
+
+    public IActionResult FindBooksISBN()
+    {
+        return View();
+    }
+
+    public async Task<IActionResult> SearchResults()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        var resultsJson = HttpContext.Session.GetString("SearchResults");
+        if (resultsJson != null)
+        {
+            var books = JsonSerializer.Deserialize<List<Book>>(resultsJson);
+            
+            return View(books);
+        }
+        
+        return View(new List<Book>());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> FindBooksTitle(string title)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -61,7 +93,32 @@ public class BookController : Controller
         
         var results = await _booksService.GetBooksByTitleAsync(title, user);
 
-        return View(results ?? new List<Book>());
+        if (results != null)
+        {
+            HttpContext.Session.SetString("SearchResults", JsonSerializer.Serialize(results));
+        }
+
+        return RedirectToAction("SearchResults", "Book");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> FindBooksAuthor(string author)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var results = await _booksService.GetBooksByAuthorAsync(author, user);
+
+        if (results != null)
+        {
+            HttpContext.Session.SetString("SearchResults", JsonSerializer.Serialize(results));
+        }
+
+        return RedirectToAction("SearchResults", "Book");
     }
 
     [HttpPost]

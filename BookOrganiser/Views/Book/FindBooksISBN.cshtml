@@ -1,0 +1,52 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Search By ISBN";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Search By ISBN</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 sidebar-container">
+            <partial name="_FindBookSideNavPartial"/>
+        </div>
+        <div class="col-md-9 col-lg-10 main-content">
+            <h1>Search By ISBN</h1>
+            <hr/>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    Error: @TempData["Error"]
+                </div>
+            }
+            <div>
+                <p>Enter the ISBN of the book you want to find, or use one of the buttons to search by author or title instead.</p>
+            </div>
+            <div class="centered-container">
+                <div class="custom-box">
+                    <div class="form-group">
+                        <form asp-controller="Book" asp-action="AddBookISBN">
+                            <div class="mb-3">
+                                <label class="form-label" for="isbn">ISBN</label>
+                                <input class="form-control" type="text" id="isbn" name="isbn" required/>
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-success w-100 p-2"><i class="bi bi-plus-lg"></i>
+                                    Add Book
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

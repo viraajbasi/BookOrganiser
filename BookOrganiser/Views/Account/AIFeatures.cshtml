@@ -20,12 +20,12 @@
             <h1>Manage AI Features</h1>
             <hr/>
             <div class="centered-container">
-                <div class="custom-box-alert">
+                <div class="custom-box">
                     @if ((bool)ViewBag.AIEnabled)
                     {
-                        <alert class="alert alert-warning">
+                        <div class="alert alert-warning">
                             AI features are currently <strong>enabled</strong>. If you wish to disable them, click the button below.
-                        </alert>
+                        </div>
                         <form asp-controller="Account" asp-action="ManageAIRegistration" method="post">
                             <input type="hidden" name="choice" value="false"/>
                             <button class="btn btn-danger"><i class="bi bi-x-lg"></i> Disable AI Features</button>

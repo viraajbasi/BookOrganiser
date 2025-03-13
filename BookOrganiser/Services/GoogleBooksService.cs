@@ -33,7 +33,7 @@ public class GoogleBooksService : IBooksService
 
     public async Task<List<Book>?> GetBooksByTitleAsync(string title, UserAccount user)
     {
-        var request = _booksService.Volumes.List($"{title}");
+        var request = _booksService.Volumes.List($"intitle:{title}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
         request.Fields = "items(id,volumeInfo(title,authors,publisher,publishedDate,description,industryIdentifiers,imageLinks(thumbnail)))";
         request.MaxResults = 40;
@@ -50,6 +50,32 @@ public class GoogleBooksService : IBooksService
                 booksToReturn.Add(ConvertToBookModel(book, user));
             }
             
+            return booksToReturn;
+        }
+
+        return null;
+    }
+
+    public async Task<List<Book>?> GetBooksByAuthorAsync(string author, UserAccount user)
+    {
+        var request = _booksService.Volumes.List($"inauthor:{author}");
+        request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
+        request.Fields =
+            "items(id,volumeInfo(title,authors,publisher,publishedDate,description,industryIdentifiers,imageLinks(thumbnail)))";
+        request.MaxResults = 40;
+
+        var response = await request.ExecuteAsync();
+
+        if (response != null && response.Items.Count > 0)
+        {
+            var books = response.Items.ToList();
+            var booksToReturn = new List<Book>();
+
+            foreach (var book in books)
+            {
+                booksToReturn.Add(ConvertToBookModel(book, user));
+            }
+
             return booksToReturn;
         }
 

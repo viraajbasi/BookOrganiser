@@ -21,7 +21,7 @@ public class OllamaService : IAIService
     public async Task<string> GenerateBookSummaryAsync(Book book)
     {
         var authors = string.Join(',', book.Authors);
-        var categories = string.Join(',', book.GoogleBooksCategories);
+        var categories = string.Join(',', book.UpstreamCategories);
         var prompt = $"""
                      Summarise the book: {book.Title} by {authors} in 250 words or less.
                      According to Google Books, the book is in the following categories: {categories}.
@@ -40,7 +40,7 @@ public class OllamaService : IAIService
     public async Task<string> GenerateKeyQuotesAsync(Book book)
     {
         var authors = string.Join(',', book.Authors);
-        var categories = string.Join(',', book.GoogleBooksCategories);
+        var categories = string.Join(',', book.UpstreamCategories);
         var prompt = $"""
                       Provide at least 10 key quotes from the book: {book.Title} by {authors}.
                       According to Google Books, the book is in the following categories: {categories}.
@@ -72,7 +72,7 @@ public class OllamaService : IAIService
     public async Task<string> GenerateKeyThemesAsync(Book book)
     {
         var authors = string.Join(',', book.Authors);
-        var categories = string.Join(',', book.GoogleBooksCategories);
+        var categories = string.Join(',', book.UpstreamCategories);
         var prompt = $"""
                       Provide at least 3 key themes from the book: {book.Title} by {authors}.
                       According to Google Books, the book is in the following categories: {categories}.

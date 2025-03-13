@@ -117,7 +117,7 @@
                 <td>
                     @{
                         <form asp-controller="Book" asp-action="AddBookFromSearchResults" method="post">
-                            <input type="hidden" name="id" value="@item.GoogleBooksID"/>
+                            <input type="hidden" name="id" value="@item.UpstreamId"/>
                             <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
                         </form>
                     }

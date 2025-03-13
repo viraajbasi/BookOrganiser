@@ -6,7 +6,7 @@ public class Book
     public string UserId { get; set; } = string.Empty;
     public UserAccount UserAccount { get; set; } = null!;
     public AISummary AISummary { get; set; } = null!;
-    public string GoogleBooksID { get; set; } = string.Empty;
+    public string UpstreamId { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Subtitle { get; set; } = string.Empty;
     public IList<string> Authors { get; set; } = new List<string>();
@@ -18,13 +18,13 @@ public class Book
     public string ISSN { get; set; } = string.Empty;
     public string OtherIdentifier  { get; set; } = string.Empty;
     public int PageCount { get; set; }
-    public IList<string> GoogleBooksCategories { get; set; } = new List<string>();
+    public IList<string> UpstreamCategories { get; set; } = new List<string>();
     public string Thumbnail { get; set; } = string.Empty;
     public string SmallThumbnail { get; set; } = string.Empty;
     public string SmallImage { get; set; } = string.Empty;
     public string MediumImage  { get; set; } = string.Empty;
     public string LargeImage { get; set; } = string.Empty;
     public string ExtraLargeImage { get; set; } = string.Empty;
-    public string GoogleBooksLink { get; set; } = string.Empty;
+    public string UpstreamLink { get; set; } = string.Empty;
     public IList<string> CustomCategories { get; set; } = new List<string>();
 }

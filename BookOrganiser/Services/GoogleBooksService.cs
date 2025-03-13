@@ -106,7 +106,7 @@ public class GoogleBooksService : IBooksService
         {
             UserId = user.Id,
             UserAccount = user,
-            GoogleBooksID = book.Id ?? string.Empty,
+            UpstreamId = book.Id ?? string.Empty,
             Title = book.VolumeInfo.Title ?? string.Empty,
             Subtitle = book.VolumeInfo.Subtitle ?? string.Empty,
             Authors = book.VolumeInfo.Authors ?? new List<string>(),
@@ -118,14 +118,14 @@ public class GoogleBooksService : IBooksService
             ISSN = identifiers.TryGetValue("ISSN", out var issn) ? issn : string.Empty,
             OtherIdentifier = identifiers.TryGetValue("OTHER", out var other) ? other : string.Empty,
             PageCount = book.VolumeInfo.PageCount ?? 0,
-            GoogleBooksCategories = book.VolumeInfo.Categories ?? new List<string>(),
+            UpstreamCategories = book.VolumeInfo.Categories ?? new List<string>(),
             Thumbnail = book.VolumeInfo.ImageLinks?.Thumbnail ?? string.Empty,
             SmallThumbnail = book.VolumeInfo.ImageLinks?.SmallThumbnail ?? string.Empty,
             SmallImage = book.VolumeInfo.ImageLinks?.Small ?? string.Empty,
             MediumImage = book.VolumeInfo.ImageLinks?.Medium ?? string.Empty,
             LargeImage = book.VolumeInfo.ImageLinks?.Large ?? string.Empty,
             ExtraLargeImage = book.VolumeInfo.ImageLinks?.ExtraLarge ?? string.Empty,
-            GoogleBooksLink = book.VolumeInfo.InfoLink ?? string.Empty
+            UpstreamLink = book.VolumeInfo.InfoLink ?? string.Empty
         };
     }
 }

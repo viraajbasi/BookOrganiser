@@ -2,20 +2,19 @@ using BookOrganiser.Models;
 using BookOrganiser.Services.Interfaces;
 using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
-using Google.Apis.Services;
 
 namespace BookOrganiser.Services;
 
-public class GoogleBooksService : IGoogleBooksService
+public class GoogleBooksService : IBooksService
 {
     private readonly BooksService _booksService;
 
     public GoogleBooksService()
     {
-        _booksService = new BooksService(new BaseClientService.Initializer());
+        _booksService = new BooksService();
     }
 
-    public async Task<Volume?> GetBookByISBNAsync(string isbn)
+    public async Task<Book?> GetBookByISBNAsync(string isbn, UserAccount user)
     {
         var request = _booksService.Volumes.List($"isbn:{isbn}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
@@ -26,13 +25,13 @@ public class GoogleBooksService : IGoogleBooksService
 
         if (response.Items != null && response.Items.Count > 0)
         {
-            return response.Items.ToList()[0];
+            return ConvertToBookModel(response.Items.ToList()[0], user);
         }
 
         return null;
     }
 
-    public async Task<List<Volume>?> GetBookByTitleAsync(string title)
+    public async Task<List<Book>?> GetBooksByTitleAsync(string title, UserAccount user)
     {
         var request = _booksService.Volumes.List($"{title}");
         request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
@@ -43,13 +42,21 @@ public class GoogleBooksService : IGoogleBooksService
 
         if (response != null && response.Items.Count > 0)
         {
-            return response.Items.ToList();
+            var books = response.Items.ToList();
+            var booksToReturn = new List<Book>();
+
+            foreach (var book in books)
+            {
+                booksToReturn.Add(ConvertToBookModel(book, user));
+            }
+            
+            return booksToReturn;
         }
 
         return null;
     }
 
-    public Book ConvertToBookModel(Volume book, UserAccount user)
+    private Book ConvertToBookModel(Volume book, UserAccount user)
     {
         var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier)
                           ?? new Dictionary<string, string>();

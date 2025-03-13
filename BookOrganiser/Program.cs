@@ -32,7 +32,7 @@ builder.Services.AddHttpClient<IAIService, OllamaService>(client =>
     client.BaseAddress = new Uri("http://localhost:11434");
 });
 
-builder.Services.AddSingleton<IGoogleBooksService, GoogleBooksService>();
+builder.Services.AddSingleton<IBooksService, GoogleBooksService>();
 
 var app = builder.Build();
 

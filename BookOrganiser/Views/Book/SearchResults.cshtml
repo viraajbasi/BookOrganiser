@@ -115,10 +115,13 @@
                     </td>
                 }
                 <td>
-                    <form asp-controller="Book" asp-action="AddBookISBN" method="post">
-                        <input type="hidden" name="identifier" value="@item.ISBN13"/>
-                        <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
-                    </form>
+                    @{
+                        var identifier = string.IsNullOrEmpty(item.ISBN10) ? item.ISBN13 : item.ISBN10;
+                        <form asp-controller="Book" asp-action="AddBookISBN" method="post">
+                            <input type="hidden" name="isbn" value="@identifier"/>
+                            <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
+                        </form>
+                    }
                 </td>
             </tr>
         }

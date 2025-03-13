@@ -13,9 +13,9 @@ public class BookController : Controller
 {
     private readonly AppDbContext _context;
     private readonly UserManager<UserAccount> _userManager;
-    private readonly IGoogleBooksService _booksService;
+    private readonly IBooksService _booksService;
 
-    public BookController(AppDbContext context, UserManager<UserAccount> userManager, IGoogleBooksService booksService)
+    public BookController(AppDbContext context, UserManager<UserAccount> userManager, IBooksService booksService)
     {
         _context = context;
         _userManager = userManager;
@@ -85,26 +85,14 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
-        var results = await _booksService.GetBookByTitleAsync(title);
+        var results = await _booksService.GetBooksByTitleAsync(title, user);
 
-        if (results == null)
-        {
-            return View(new List<Book>());
-        }
-
-        var bookResponse = new List<Book>();
-
-        foreach (var result in results)
-        {
-            bookResponse.Add(_booksService.ConvertToBookModel(result, user));
-        }
-
-        return View(bookResponse);
+        return View(results ?? new List<Book>());
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddBookISBN(string identifier)
+    public async Task<IActionResult> AddBookISBN(string isbn)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -112,29 +100,27 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
-        var result = await _booksService.GetBookByISBNAsync(identifier);
+        var result = await _booksService.GetBookByISBNAsync(isbn, user);
         
         if (result != null && ModelState.IsValid)
         {
-            var bookResponse = _booksService.ConvertToBookModel(result, user);
             var aiSummary = new AISummary
             {
-                BookId = bookResponse.Id,
-                Book = bookResponse,
+                BookId = result.Id,
+                Book = result,
             };
             
-            bookResponse.AISummary = aiSummary;
+            result.AISummary = aiSummary;
             
-            _context.Add(bookResponse);
+            _context.Add(result);
             _context.AISummary.Add(aiSummary);
-            
             
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Home");
         }
         
-        TempData["Error"] = $"No search results found for '{identifier}'";
+        TempData["Error"] = $"No search results found for '{isbn}'";
         return RedirectToAction("Find", "Book");
     }
 

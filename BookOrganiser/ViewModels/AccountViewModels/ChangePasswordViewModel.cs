@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BookOrganiser.ViewModels.Account;
+namespace BookOrganiser.ViewModels.AccountViewModels;
 
 public class ChangePasswordViewModel
 {
+    [DataType(DataType.EmailAddress)]
+    public string Email { get; set; }
+    
     [Required(ErrorMessage = "Your current password is required.")]
-    [StringLength(40, MinimumLength = 8,
-        ErrorMessage = "The {0} must be at least {2} and at most {0} characters long.")]
+    [StringLength(40, MinimumLength = 8, ErrorMessage = "The {0} must be at least {2} and at most {0} characters long.")]
     [DataType(DataType.Password)]
     [Display(Name = "Current Password")]
     public string CurrentPassword { get; set; } = string.Empty;

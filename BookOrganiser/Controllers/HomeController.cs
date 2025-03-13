@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BookOrganiser.Models;
 using BookOrganiser.Data;
+using BookOrganiser.ViewModels.HomeViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -28,11 +29,13 @@ public class HomeController : Controller
         }
         
         var userBooks = _context.Books.Where(e => e.UserId == user.Id).ToList();
+        var viewModel = new IndexViewModel
+        {
+            Categories = user.UserCategories,
+            Books = userBooks,
+        };
         
-        ViewBag.HasAnyBooks = userBooks.Count != 0;
-        ViewBag.Categories = user.UserCategories;
-        
-        return View(userBooks);
+        return View(viewModel);
     }
 
     [Authorize]
@@ -43,11 +46,13 @@ public class HomeController : Controller
         {
             return RedirectToAction("Login", "Account");
         }
-        
-        ViewBag.Categories = user.UserCategories.Remove("favourites");
-        ViewBag.HasAnyCategories = user.UserCategories.Count > 0;
 
-        return View();
+        var viewModel = new EditCategoriesViewModel
+        {
+            Categories = user.UserCategories
+        };
+
+        return View(viewModel);
     }
 
     public IActionResult Privacy()

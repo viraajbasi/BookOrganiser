@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookOrganiser.Models;
 using BookOrganiser.Services.Interfaces;
+using BookOrganiser.ViewModels.BookViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -41,10 +42,14 @@ public class BookController : Controller
         {
             return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
+        
+        var viewModel = new DetailsViewModel
+        {
+            Categories = user.UserCategories,
+            Book = book,
+        };
 
-        ViewBag.Categories = user.UserCategories;
-
-        return View(book);
+        return View(viewModel);
     }
     
     public IActionResult FindBooksTitle()

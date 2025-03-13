@@ -1,4 +1,6 @@
-@using BookOrganiser.ViewModels.Account
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BookOrganiser.ViewModels.AccountViewModels
+@model AIFeaturesViewModel
 
 @{
     ViewData["Title"] = "Manage AI Features";
@@ -21,7 +23,7 @@
             <hr/>
             <div class="centered-container">
                 <div class="custom-box">
-                    @if ((bool)ViewBag.AIEnabled)
+                    @if (Model.AIFeaturesEnabled)
                     {
                         <div class="alert alert-warning">
                             AI features are currently <strong>enabled</strong>. If you wish to disable them, click the button below.

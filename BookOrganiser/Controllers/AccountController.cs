@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using BookOrganiser.ViewModels;
 using BookOrganiser.Models;
-using BookOrganiser.ViewModels.Account;
+using BookOrganiser.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Authentication;
 
 namespace BookOrganiser.Controllers;
@@ -59,10 +59,13 @@ public class AccountController : Controller
         {
             return RedirectToAction("Login", "Account");
         }
+
+        if (user.Email == null)
+        {
+            return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred" });
+        }
         
-        ViewBag.Email = user.Email;
-        
-        return View();
+        return View(new ChangePasswordViewModel { Email = user.Email });
     }
 
     public IActionResult ConfirmPasswordChange()
@@ -77,10 +80,8 @@ public class AccountController : Controller
         {
             return RedirectToAction("Login", "Account");
         }
-
-        ViewBag.AIEnabled = user.AcceptedAIFeatures;
         
-        return View();
+        return View(new AIFeaturesViewModel { AIFeaturesEnabled = user.AcceptedAIFeatures });
     }
     
     public IActionResult ConfirmAIChoice()

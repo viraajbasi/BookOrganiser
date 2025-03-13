@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BookOrganiser.ViewModels.Account;
+namespace BookOrganiser.ViewModels.AccountViewModels;
 
 public class ForgotPasswordViewModel
 {

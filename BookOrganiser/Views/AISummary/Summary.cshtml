@@ -1,7 +1,9 @@
-@model BookOrganiser.Models.AISummary
+@using BookOrganiser.ViewModels.AISummaryViewModels
+@model SummaryViewModel
 
 @{
     ViewData["Title"] = "Details";
+    var summary = Model.Summary;
 }
 
 <!DOCTYPE html>
@@ -15,21 +17,21 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3 col-lg-2 sidebar-container">
-            <partial name="_BookSideNavPartial" model="@(BookId: Model.Book.Id, SummaryId: Model.Id)" />
+            <partial name="_BookSideNavPartial" model="@(BookId: summary.Book.Id, SummaryId: summary.Id)" />
         </div>
         <div class="col-md-9 col-lg-10 main-content">
             <div>
                 <h1>AI Summary</h1>
                 <hr/>
-                @if ((bool)ViewBag.AIEnabled)
+                @if (Model.AcceptedAIFeatures)
                 {
                     <dl class="row">
                         <dt>Summary</dt>
-                        <dd>@Html.Raw(Model.Summary)</dd>
+                        <dd>@Html.Raw(summary.Summary)</dd>
                         <dt>Key Quotes</dt>
-                        <dd>@Html.Raw(Model.KeyQuotes)</dd>
+                        <dd>@Html.Raw(summary.KeyQuotes)</dd>
                         <dt>Key Themes</dt>
-                        <dd>@Html.Raw(Model.KeyThemes)</dd>
+                        <dd>@Html.Raw(summary.KeyThemes)</dd>
                     </dl>
                 }
                 else

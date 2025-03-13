@@ -1,10 +1,13 @@
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model BookOrganiser.Models.Book
+@using BookOrganiser.ViewModels.BookViewModels
+@model DetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
     var textInfo = new CultureInfo("en-GB", false).TextInfo;
+    var allCategories = Model.Categories;
+    var book = Model.Book;
 }
 
 <!DOCTYPE html>
@@ -18,149 +21,149 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3 col-lg-2 sidebar-container">
-            <partial name="_BookSideNavPartial" model="@(BookId: Model.Id, SummaryId: Model.AISummary.Id)" />
+            <partial name="_BookSideNavPartial" model="@(BookId: book.Id, SummaryId: book.AISummary.Id)" />
         </div>
         <div class="col-md-9 col-lg-10 main-content">
             <h1>Book Details</h1>
             <hr/>
             <dl class="row">
-                @if (Model.Title != string.Empty)
+                @if (book.Title != string.Empty)
                 {
                     <dt class="col-sm-2">
                         Title
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Title)
+                        @Html.DisplayFor(model => book.Title)
                     </dd>
                 }
-                @if (Model.Subtitle != string.Empty)
+                @if (book.Subtitle != string.Empty)
                 {
                     <dt class="col-sm-2">
                         Subtitle
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Subtitle)
+                        @Html.DisplayFor(model => book.Subtitle)
                     </dd>
                 }
-                @if (Model.Authors.Any())
+                @if (book.Authors.Any())
                 {
                     <dt class="col-sm-2">
                         Author(s)
                     </dt>
                     <dd class="col-sm-10">
-                        @string.Join(", ", Model.Authors)
+                        @string.Join(", ", book.Authors)
                     </dd>
                 }
-                @if (Model.Publisher != string.Empty)
+                @if (book.Publisher != string.Empty)
                 {
                     <dt class="col-sm-2">
                         Publisher
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Publisher)
+                        @Html.DisplayFor(model => book.Publisher)
                     </dd>
                 }
-                @if (Model.PublishedDate != string.Empty)
+                @if (book.PublishedDate != string.Empty)
                 {
                     <dt class="col-sm-2">
                         Year Published
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.PublishedDate)
+                        @Html.DisplayFor(model => book.PublishedDate)
                     </dd>
                 }
-                @if (Model.Description != string.Empty)
+                @if (book.Description != string.Empty)
                 {
                     <dt class="col-sm-2">
                         Description
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.Raw(Model.Description)
+                        @Html.Raw(book.Description)
                     </dd>
                 }
-                @if (Model.ISBN10 != string.Empty)
+                @if (book.ISBN10 != string.Empty)
                 {
                     <dt class="col-sm-2">
                         ISBN-10
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.ISBN10)
+                        @Html.DisplayFor(model => book.ISBN10)
                     </dd>
                 }
-                @if (Model.ISBN13 != string.Empty)
+                @if (book.ISBN13 != string.Empty)
                 {
                     <dt class="col-sm-2">
                         ISBN-13
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.ISBN13)
+                        @Html.DisplayFor(model => book.ISBN13)
                     </dd>
                 }
-                @if (Model.ISSN != string.Empty)
+                @if (book.ISSN != string.Empty)
                 {
                     <dt class="col-sm-2">
                         ISSN
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.ISSN)
+                        @Html.DisplayFor(model => book.ISSN)
                     </dd>
                 }
-                @if (Model.OtherIdentifier != string.Empty)
+                @if (book.OtherIdentifier != string.Empty)
                 {
                     <dt class="col-sm-2">
                         Other Identifier
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.OtherIdentifier)
+                        @Html.DisplayFor(model => book.OtherIdentifier)
                     </dd>
                 }
                 <dt class="col-sm-2">
                     Page Count
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.PageCount)
+                    @Html.DisplayFor(model => book.PageCount)
                 </dd>
-                @if (Model.UpstreamCategories.Any())
+                @if (book.UpstreamCategories.Any())
                 {
                     <dt class="col-sm-2">
                         Categories
                     </dt>
                     <dd class="col-sm-10">
-                        @string.Join(", ", Model.UpstreamCategories)
+                        @string.Join(", ", book.UpstreamCategories)
                     </dd>
                 }
-                @if (Model.CustomCategories.Any())
+                @if (book.CustomCategories.Any())
                 {
                     <dt class="col-sm-2">
                         Custom Categories
                     </dt>
                     <dd class="col-sm-10">
-                        @textInfo.ToTitleCase(string.Join(", ", Model.CustomCategories))
+                        @textInfo.ToTitleCase(string.Join(", ", book.CustomCategories))
                     </dd>
                 }
-                @{ var thumbnail = (Model.Thumbnail != string.Empty) ? Model.Thumbnail : Model.SmallThumbnail; }
+                @{ var thumbnail = (book.Thumbnail != string.Empty) ? book.Thumbnail : book.SmallThumbnail; }
                 <dt class="col-sm-2">
                     Thumbnail
                 </dt>
                 <dd class="col-sm-10">
                     @if (thumbnail != string.Empty)
                     {
-                        <img src="@thumbnail" alt="Thumbnail for @Model.Title."/>
+                        <img src="@thumbnail" alt="Thumbnail for @book.Title."/>
                     }
                     else
                     {
-                        <img src="~/images/no-cover.jpg" alt="No thumbnail available for @Model.Title." width="130" height="170"/>
+                        <img src="~/images/no-cover.jpg" alt="No thumbnail available for @book.Title." width="130" height="170"/>
                     }
                 </dd>
             </dl>
             <div class="d-flex justify-content-between flex-wrap">
                 <div class="d-flex flex-column">
                     <div class="mb-3">
-                        @if (Model.CustomCategories.Contains("favourites"))
+                        @if (book.CustomCategories.Contains("favourites"))
                         {
                             <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
                                 <input type="hidden" id="category" name="category" value="favourites" />
-                                <input type="hidden" id="id" name="id" value="@Model.Id" />
+                                <input type="hidden" id="id" name="id" value="@book.Id" />
                                 <button type="submit" class="btn btn-warning"><i class="bi bi-star-fill"></i> Remove from Favourites</button>
                             </form>
                         }
@@ -168,7 +171,7 @@
                         {
                             <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
                                 <input type="hidden" id="category" name="category" value="favourites" />
-                                <input type="hidden" id="id" name="id" value="@Model.Id" />
+                                <input type="hidden" id="id" name="id" value="@book.Id" />
                                 <button type="submit" class="btn btn-warning"><i class="bi bi-star"></i> Add to Favourites</button>
                             </form>
                         }
@@ -181,9 +184,8 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             @{
-                                var allCategories = (List<string>)ViewBag.Categories;
-                                var addCategories = allCategories.Except(Model.CustomCategories).ToList();
-                                var removeCategories = allCategories.Intersect(Model.CustomCategories).ToList();
+                                var addCategories = allCategories.Except(book.CustomCategories).ToList();
+                                var removeCategories = allCategories.Intersect(book.CustomCategories).ToList();
 
                                 <div class="modal-header">
                                     <h1>Category Management</h1>
@@ -203,7 +205,7 @@
                                                         }
                                                     </select>
                                                 </div>
-                                                <input type="hidden" name="id" value="@Model.Id"/>
+                                                <input type="hidden" name="id" value="@book.Id"/>
                                                 <div class="mb-3">
                                                     <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book to Category</button>
                                                 </div>
@@ -225,7 +227,7 @@
                                                         }
                                                     </select>
                                                 </div>
-                                                <input type="hidden" name="id" value="@Model.Id"/>
+                                                <input type="hidden" name="id" value="@book.Id"/>
                                                 <div class="mb-3">
                                                     <button type="submit" class="btn btn-danger"><i class="bi bi-dash-lg"></i> Remove Book from Category</button>
                                                 </div>
@@ -253,7 +255,7 @@
                             </div>
                             <div class="modal-footer d-flex justify-content-between">
                                 <form asp-controller="Book" asp-action="DeleteBook">
-                                    <input type="hidden" asp-for="Id"/>
+                                    <input type="hidden" asp-for="Book.Id"/>
                                     <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete Book From Library</button>
                                 </form>
                                 <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-close"></i> Close</button>

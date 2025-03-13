@@ -1,10 +1,13 @@
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IEnumerable<BookOrganiser.Models.Book>
+@using BookOrganiser.ViewModels.HomeViewModels
+@model IndexViewModel
 
 @{
     ViewData["Title"] = "Index";
     var textInfo = new CultureInfo("en-GB", false).TextInfo;
+    var books = Model.Books;
+    
 }
 
 <!DOCTYPE html>
@@ -23,7 +26,7 @@
 }
 <h1>My Library</h1>
 <hr />
-@if (!(bool)ViewBag.HasAnyBooks)
+@if (!Model.HasAnyBooks)
 {
     <div class="alert alert-primary">
         <strong>You currently don't have any books in your library!</strong> Click <a asp-controller="Book" asp-action="Find">here</a> to get started (or alternatively click "Add Book").
@@ -31,10 +34,10 @@
 }
 @{
     var emptyCategories = new List<string>();
-    @foreach (var category in (List<string>)ViewBag.Categories)
+    @foreach (var category in Model.Categories)
     {
-        var books = Model.Where(e => e.CustomCategories.Contains(category)).ToList();
-        if (!books.Any())
+        var filteredBooks = books.Where(e => e.CustomCategories.Contains(category)).ToList();
+        if (!filteredBooks.Any())
         {
             emptyCategories.Add(category);
             continue;
@@ -43,7 +46,7 @@
         <h2>@textInfo.ToTitleCase(category)</h2>
         <div class="bookshelf-container">
             <div class="bookshelf-item-list">
-                @foreach (var item in books)
+                @foreach (var item in filteredBooks)
                 {
                     var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail;
                     <div class="bookshelf-item">
@@ -80,12 +83,12 @@
     }
 }
 @{
-    if ((bool)ViewBag.HasAnyBooks)
+    if (Model.HasAnyBooks)
     {
         <h2>Unsorted Books</h2>
         <div class="bookshelf-container">
             <div class="bookshelf-item-list">
-                @foreach (var item in Model.Where(e => !e.CustomCategories.Any()))
+                @foreach (var item in books.Where(e => !e.CustomCategories.Any()))
                 {
                     var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail;
                     <div class="bookshelf-item">

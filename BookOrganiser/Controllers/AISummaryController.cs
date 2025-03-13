@@ -1,6 +1,7 @@
 using BookOrganiser.Data;
 using BookOrganiser.Models;
 using BookOrganiser.Services.Interfaces;
+using BookOrganiser.ViewModels.AISummaryViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -49,9 +50,13 @@ public class AISummaryController : Controller
             
             await _context.SaveChangesAsync();
         }
+
+        var viewModel = new SummaryViewModel
+        {
+            Summary = summary,
+            AcceptedAIFeatures = user.AcceptedAIFeatures
+        };
         
-        ViewBag.AIEnabled = user.AcceptedAIFeatures;
-        
-        return View(summary);
+        return View(viewModel);
     }
 }

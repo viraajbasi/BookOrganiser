@@ -255,7 +255,7 @@
                             </div>
                             <div class="modal-footer d-flex justify-content-between">
                                 <form asp-controller="Book" asp-action="DeleteBook">
-                                    <input type="hidden" asp-for="Book.Id"/>
+                                    <input type="hidden" name="id" value="@book.Id" />
                                     <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete Book From Library</button>
                                 </form>
                                 <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-close"></i> Close</button>

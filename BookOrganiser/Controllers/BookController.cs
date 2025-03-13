@@ -188,7 +188,7 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _context.Books.FirstOrDefaultAsync(e => e.Id == id);
             if (book != null)
             {
                 _context.Books.Remove(book);

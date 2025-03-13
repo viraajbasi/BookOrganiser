@@ -1,8 +1,6 @@
 using BookOrganiser.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Google.Apis.Books.v1;
-using Google.Apis.Books.v1.Data;
 using BookOrganiser.Models;
 using BookOrganiser.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +13,13 @@ public class BookController : Controller
 {
     private readonly AppDbContext _context;
     private readonly UserManager<UserAccount> _userManager;
+    private readonly IGoogleBooksService _booksService;
 
-    public BookController(AppDbContext context, UserManager<UserAccount> userManager)
+    public BookController(AppDbContext context, UserManager<UserAccount> userManager, IGoogleBooksService booksService)
     {
         _context = context;
         _userManager = userManager;
+        _booksService = booksService;
     }
 
     public async Task<IActionResult> Details(int? id)
@@ -85,7 +85,7 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
-        var results = await GetSearchResults(title);
+        var results = await _booksService.GetBookByTitleAsync(title);
 
         if (results == null)
         {
@@ -96,7 +96,7 @@ public class BookController : Controller
 
         foreach (var result in results)
         {
-            bookResponse.Add(GoogleBooksToModel(result, user));
+            bookResponse.Add(_booksService.ConvertToBookModel(result, user));
         }
 
         return View(bookResponse);
@@ -104,7 +104,7 @@ public class BookController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddBook(string identifier, bool isISBN)
+    public async Task<IActionResult> AddBookISBN(string identifier)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -112,11 +112,11 @@ public class BookController : Controller
             return RedirectToAction("Login", "Account");
         }
         
-        var result = await PerformSearchQuery(identifier, isISBN);
+        var result = await _booksService.GetBookByISBNAsync(identifier);
         
         if (result != null && ModelState.IsValid)
         {
-            var bookResponse = GoogleBooksToModel(result, user);
+            var bookResponse = _booksService.ConvertToBookModel(result, user);
             var aiSummary = new AISummary
             {
                 BookId = bookResponse.Id,
@@ -168,90 +168,5 @@ public class BookController : Controller
         }
 
         return RedirectToAction("Error", "Home", new { message = $"Unknown error occured while removing book from category: '{category}'" });
-    }
-    
-    private static async Task<Volume?> PerformSearchQuery(string query, bool isISBN)
-    {
-        var service = new BooksService();
-        
-        if (isISBN)
-        {
-            var request = service.Volumes.List($"isbn:{query}");
-            request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-            request.Fields = "items(id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink))";
-            request.MaxResults = 1;
-
-            var response = await request.ExecuteAsync();
-
-            if (response.Items != null)
-            {
-                return response.Items.ToList()[0];
-            }
-        }
-        else
-        {
-            var request = service.Volumes.Get($"{query}");
-            request.Fields = "id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink)";
-            
-            var response = await request.ExecuteAsync();
-
-            if (response != null)
-            {
-                return response;
-            }
-        }
-
-        return null;
-    }
-    
-    private static async Task<List<Volume>?> GetSearchResults(string title)
-    {
-        var service = new BooksService();
-
-        var request = service.Volumes.List($"{title}");
-        request.OrderBy = VolumesResource.ListRequest.OrderByEnum.Relevance;
-        request.Fields = "items(id,volumeInfo(title,authors,publisher,publishedDate,description,industryIdentifiers,imageLinks(thumbnail)))";
-        request.MaxResults = 40;
-
-        var response = await request.ExecuteAsync();
-
-        if (response != null && response.Items.Count > 0)
-        {
-            return response.Items.ToList();
-        }
-
-        return null;
-    }
-    
-    private static Book GoogleBooksToModel(Volume book, UserAccount user)
-    {
-        var identifiers = book.VolumeInfo.IndustryIdentifiers?.ToDictionary(i => i.Type, i=> i.Identifier)
-                          ?? new Dictionary<string, string>();
-
-        return new Book()
-        {
-            UserId = user.Id,
-            UserAccount = user,
-            GoogleBooksID = book.Id ?? string.Empty,
-            Title = book.VolumeInfo.Title ?? string.Empty,
-            Subtitle = book.VolumeInfo.Subtitle ?? string.Empty,
-            Authors = book.VolumeInfo.Authors ?? new List<string>(),
-            Publisher = book.VolumeInfo.Publisher ?? string.Empty,
-            PublishedDate = book.VolumeInfo.PublishedDate ?? string.Empty,
-            Description = book.VolumeInfo.Description ?? string.Empty,
-            ISBN10 = identifiers.TryGetValue("ISBN_10", out var isbn10) ? isbn10 : string.Empty,
-            ISBN13 = identifiers.TryGetValue("ISBN_13", out var isbn13) ? isbn13 : string.Empty,
-            ISSN = identifiers.TryGetValue("ISSN", out var issn) ? issn : string.Empty,
-            OtherIdentifier = identifiers.TryGetValue("OTHER", out var other) ? other : string.Empty,
-            PageCount = book.VolumeInfo.PageCount ?? 0,
-            GoogleBooksCategories = book.VolumeInfo.Categories ?? new List<string>(),
-            Thumbnail = book.VolumeInfo.ImageLinks?.Thumbnail ?? string.Empty,
-            SmallThumbnail = book.VolumeInfo.ImageLinks?.SmallThumbnail ?? string.Empty,
-            SmallImage = book.VolumeInfo.ImageLinks?.Small ?? string.Empty,
-            MediumImage = book.VolumeInfo.ImageLinks?.Medium ?? string.Empty,
-            LargeImage = book.VolumeInfo.ImageLinks?.Large ?? string.Empty,
-            ExtraLargeImage = book.VolumeInfo.ImageLinks?.ExtraLarge ?? string.Empty,
-            GoogleBooksLink = book.VolumeInfo.InfoLink ?? string.Empty
-        };
     }
 }

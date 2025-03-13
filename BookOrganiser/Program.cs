@@ -32,6 +32,8 @@ builder.Services.AddHttpClient<IAIService, OllamaService>(client =>
     client.BaseAddress = new Uri("http://localhost:11434");
 });
 
+builder.Services.AddSingleton<IGoogleBooksService, GoogleBooksService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

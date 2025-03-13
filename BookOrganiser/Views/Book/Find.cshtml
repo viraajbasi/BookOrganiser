@@ -22,9 +22,8 @@
     <div class="centered-container">
         <div class="custom-box">
             <div class="form-group">
-                <form asp-controller="Book" asp-action="AddBook" method="post">
+                <form asp-controller="Book" asp-action="AddBookISBN" method="post">
                     <div class="mb-3">
-                        <input type="hidden" name="isISBN" value="true"/>
                         <label class="form-label" for="identifier">Book ISBN</label>
                         <input class="form-control" type="text" id="identifier" name="identifier" required/>
                     </div>

@@ -115,9 +115,8 @@
                     </td>
                 }
                 <td>
-                    <form asp-controller="Book" asp-action="AddBook" method="post">
-                        <input type="hidden" name="isISBN" value="false"/>
-                        <input type="hidden" name="identifier" value="@item.GoogleBooksID"/>
+                    <form asp-controller="Book" asp-action="AddBookISBN" method="post">
+                        <input type="hidden" name="identifier" value="@item.ISBN13"/>
                         <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
                     </form>
                 </td>

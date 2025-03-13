@@ -72,7 +72,7 @@ public class BookController : Controller
         return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
     }
 
-    public IActionResult Find()
+    public IActionResult FindBooks()
     {
         return View();
     }

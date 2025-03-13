@@ -12,129 +12,129 @@
     <title>Index</title>
 </head>
 <body>
-@if (Model.Any())
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>
-                Title
-            </th>
-            <th>
-                Authors
-            </th>
-            <th>
-                Publisher
-            </th>
-            <th>
-                Date Published
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Thumbnail
-            </th>
-            <th>
-                Actions
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                @if (item.Title != string.Empty)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        Title Not Found.
-                    </td>
-                }
-                @if (item.Authors.Any())
-                {
-                    <td>
-                        @string.Join(", ", item.Authors)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        No Authors Found.
-                    </td>
-                }
-                @if (item.Publisher != string.Empty)
-                {
-                    <td>@Html.DisplayFor(modelItem => item.Publisher)</td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        Publisher Not Found.
-                    </td>
-                }
-                @if (item.PublishedDate != string.Empty)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PublishedDate)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        Published Date Not Found.
-                    </td>
-                }
-                @if (item.Description != string.Empty)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        Description Not Found.
-                    </td>
-                }
-                @if (item.Thumbnail != string.Empty)
-                {
-                    <td>
-                        <img src="@Html.DisplayFor(modelItem => item.Thumbnail)" alt="Thumbnail for @item.Title."/>
-                    </td>
-                }
-                else
-                {
-                    <td class="text-danger">
-                        <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
-                    </td>
-                }
-                <td>
-                    @{
-                        <form asp-controller="Book" asp-action="AddBookFromSearchResults" method="post">
-                            <input type="hidden" name="id" value="@item.UpstreamId"/>
-                            <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
-                        </form>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 sidebar-container">
+            <partial name="_FindBookSideNavPartial"/>
+        </div>
+        <div class="col-md-9 col-lg-10 main-content">
+            @if (Model.Any())
+            {
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Authors
+                        </th>
+                        <th>
+                            Publisher
+                        </th>
+                        <th>
+                            Date Published
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Thumbnail
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @if (item.Title != string.Empty)
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    Title Not Found.
+                                </td>
+                            }
+                            @if (item.Authors.Any())
+                            {
+                                <td>
+                                    @string.Join(", ", item.Authors)
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    No Authors Found.
+                                </td>
+                            }
+                            @if (item.Publisher != string.Empty)
+                            {
+                                <td>@Html.DisplayFor(modelItem => item.Publisher)</td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    Publisher Not Found.
+                                </td>
+                            }
+                            @if (item.PublishedDate != string.Empty)
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PublishedDate)
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    Published Date Not Found.
+                                </td>
+                            }
+                            @if (item.Description != string.Empty)
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    Description Not Found.
+                                </td>
+                            }
+                            @if (item.Thumbnail != string.Empty)
+                            {
+                                <td>
+                                    <img src="@Html.DisplayFor(modelItem => item.Thumbnail)" alt="Thumbnail for @item.Title."/>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170"/>
+                                </td>
+                            }
+                            <td>
+                                @{
+                                    <form asp-controller="Book" asp-action="AddBookFromSearchResults" method="post">
+                                        <input type="hidden" name="id" value="@item.UpstreamId"/>
+                                        <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
                     }
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="alert alert-danger mb-3">
-        No search results found! Try another query.
+                    </tbody>
+                </table>
+            }
+        </div>
     </div>
-    <form asp-controller="Book" asp-action="FindBooksTitle" method="get">
-        <button type="submit" class="btn btn-success"><i class="bi bi-arrow-left"></i> Back</button>
-    </form>
-}
+</div>
 </body>
 </html>

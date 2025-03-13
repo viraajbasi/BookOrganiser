@@ -102,9 +102,11 @@ public class BookController : Controller
         if (results != null)
         {
             HttpContext.Session.SetString("SearchResults", JsonSerializer.Serialize(results));
+            return RedirectToAction("SearchResults", "Book");
         }
 
-        return RedirectToAction("SearchResults", "Book");
+        TempData["Error"] = $"No results found for query: '{title}'.";
+        return RedirectToAction("FindBooksTitle", "Book");
     }
 
     [HttpPost]
@@ -122,9 +124,11 @@ public class BookController : Controller
         if (results != null)
         {
             HttpContext.Session.SetString("SearchResults", JsonSerializer.Serialize(results));
+            return RedirectToAction("SearchResults", "Book");
         }
 
-        return RedirectToAction("SearchResults", "Book");
+        TempData["Error"] = $"No results found for query: '{author}'.";
+        return RedirectToAction("FindBooksAuthor", "Book");
     }
 
     [HttpPost]
@@ -142,9 +146,11 @@ public class BookController : Controller
         if (results != null)
         {
             HttpContext.Session.SetString("SearchResults", JsonSerializer.Serialize(results));
+            return RedirectToAction("SearchResults", "Book");
         }
-
-        return RedirectToAction("SearchResults", "Book");
+        
+        TempData["Error"] = $"No results found for query: '{isbn}'.";
+        return RedirectToAction("FindBooksISBN", "Book");
     }
     
     [HttpPost]
@@ -178,7 +184,7 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
         
-        TempData["Error"] = $"No search results found for '{id}'";
+        TempData["Error"] = $"No search results found for query: '{id}'.";
         return RedirectToAction("FindBooksTitle", "Book");
     }
 

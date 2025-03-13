@@ -2,6 +2,7 @@ using BookOrganiser.Models;
 using BookOrganiser.Services.Interfaces;
 using Google.Apis.Books.v1;
 using Google.Apis.Books.v1.Data;
+using Google.Apis.Services;
 
 namespace BookOrganiser.Services;
 
@@ -11,7 +12,7 @@ public class GoogleBooksService : IBooksService
 
     public GoogleBooksService()
     {
-        _booksService = new BooksService();
+        _booksService = new BooksService(new BaseClientService.Initializer());
     }
 
     public async Task<Book?> GetBookByUpstreamId(string id, UserAccount user)
@@ -38,9 +39,14 @@ public class GoogleBooksService : IBooksService
         
         var response = await request.ExecuteAsync();
 
-        if (response.Items != null && response.Items.Count > 0)
+        if (response != null)
         {
-            var books = response.Items.ToList();
+            var books = response.Items?.ToList();
+            if (books == null)
+            {
+                return null;
+            }
+            
             var booksToReturn = new List<Book>();
 
             foreach (var book in books)
@@ -66,9 +72,14 @@ public class GoogleBooksService : IBooksService
 
         var response = await request.ExecuteAsync();
 
-        if (response != null && response.Items.Count > 0)
+        if (response != null)
         {
-            var books = response.Items.ToList();
+            var books = response.Items?.ToList();
+            if (books == null)
+            {
+                return null;
+            }
+            
             var booksToReturn = new List<Book>();
 
             foreach (var book in books)
@@ -94,9 +105,14 @@ public class GoogleBooksService : IBooksService
 
         var response = await request.ExecuteAsync();
 
-        if (response != null && response.Items.Count > 0)
+        if (response != null)
         {
-            var books = response.Items.ToList();
+            var books = response.Items?.ToList();
+            if (books == null)
+            {
+                return null;
+            }
+            
             var booksToReturn = new List<Book>();
 
             foreach (var book in books)

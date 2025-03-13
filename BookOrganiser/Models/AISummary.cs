@@ -9,4 +9,6 @@ public class AISummary
     public string Summary { get; set; } = string.Empty;
     public string KeyQuotes { get; set; } = string.Empty;
     public string KeyThemes { get; set; } = string.Empty;
+    public DateTime? GeneratedAt { get; set; }
+    public bool IsGenerated { get; set; }
 }

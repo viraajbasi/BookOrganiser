@@ -116,9 +116,8 @@
                 }
                 <td>
                     @{
-                        var identifier = string.IsNullOrEmpty(item.ISBN10) ? item.ISBN13 : item.ISBN10;
-                        <form asp-controller="Book" asp-action="AddBookISBN" method="post">
-                            <input type="hidden" name="isbn" value="@identifier"/>
+                        <form asp-controller="Book" asp-action="AddBookFromSearchResults" method="post">
+                            <input type="hidden" name="id" value="@item.GoogleBooksID"/>
                             <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Book</button>
                         </form>
                     }

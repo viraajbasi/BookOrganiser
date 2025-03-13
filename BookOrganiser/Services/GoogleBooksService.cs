@@ -31,6 +31,21 @@ public class GoogleBooksService : IBooksService
         return null;
     }
 
+    public async Task<Book?> GetBookByUpstreamId(string id, UserAccount user)
+    {
+        var request = _booksService.Volumes.Get($"{id}");
+        request.Fields = "id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink)";
+            
+        var response = await request.ExecuteAsync();
+
+        if (response != null)
+        {
+            return ConvertToBookModel(response, user);
+        }
+
+        return null;
+    }
+
     public async Task<List<Book>?> GetBooksByTitleAsync(string title, UserAccount user)
     {
         var request = _booksService.Volumes.List($"intitle:{title}");

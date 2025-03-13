@@ -154,8 +154,28 @@
                 </dd>
             </dl>
             <div class="d-flex justify-content-between flex-wrap">
-                <div class="mb-3">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal"><i class="bi bi-pencil-square"></i> Edit Categories</button>
+                <div class="d-flex flex-column">
+                    <div class="mb-3">
+                        @if (Model.CustomCategories.Contains("favourites"))
+                        {
+                            <form asp-controller="Book" asp-action="RemoveBookFromCategory" method="post">
+                                <input type="hidden" id="category" name="category" value="favourites" />
+                                <input type="hidden" id="id" name="id" value="@Model.Id" />
+                                <button type="submit" class="btn btn-warning"><i class="bi bi-star-fill"></i> Remove from Favourites</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="Book" asp-action="AddBookToCategory" method="post">
+                                <input type="hidden" id="category" name="category" value="favourites" />
+                                <input type="hidden" id="id" name="id" value="@Model.Id" />
+                                <button type="submit" class="btn btn-warning"><i class="bi bi-star"></i> Add to Favourites</button>
+                            </form>
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#categoryModal"><i class="bi bi-pencil-square"></i> Edit Categories</button>
+                    </div>
                 </div>
                 <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
                     <div class="modal-dialog">

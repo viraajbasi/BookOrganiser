@@ -152,7 +152,41 @@ public class BookController : Controller
         }
         
         TempData["Error"] = $"No search results found for '{isbn}'";
-        return RedirectToAction("Find", "Book");
+        return RedirectToAction("FindBooksTitle", "Book");
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddBookFromSearchResults(string id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
+        var result = await _booksService.GetBookByUpstreamId(id, user);
+        
+        if (result != null && ModelState.IsValid)
+        {
+            var aiSummary = new AISummary
+            {
+                BookId = result.Id,
+                Book = result,
+            };
+            
+            result.AISummary = aiSummary;
+            
+            _context.Add(result);
+            _context.AISummary.Add(aiSummary);
+            
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+        
+        TempData["Error"] = $"No search results found for '{id}'";
+        return RedirectToAction("FindBooksTitle", "Book");
     }
 
     [HttpPost]

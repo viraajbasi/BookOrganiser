@@ -44,7 +44,7 @@ public class HomeController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-        ViewBag.Categories = user.UserCategories;
+        ViewBag.Categories = user.UserCategories.Remove("Favourites");
         ViewBag.HasAnyCategories = user.UserCategories.Count > 0;
 
         return View();
@@ -104,6 +104,12 @@ public class HomeController : Controller
         if (user == null)
         {
             return RedirectToAction("Login", "Account");
+        }
+
+        if (category.ToLower() == "favourites")
+        {
+            TempData["Error"] = "Cannot delete favourites.";
+            return RedirectToAction("Index", "Home");
         }
         
         var booksToUpdate = _context.Books.Where(e => e.UserAccount == user && e.CustomCategories.Contains(category));

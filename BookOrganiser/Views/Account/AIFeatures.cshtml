@@ -33,9 +33,9 @@
                     }
                     else
                     {
-                        <alert class="alert alert-warning">
-                            AI features are currently <strong>disabled</strong>. If you wish to enable them, click the button below.
-                        </alert>
+                        <div class="alert alert-warning">
+                            <p>AI features are currently <strong>disabled</strong>. If you wish to enable them, click the button below.</p>
+                        </div>
                         <form asp-controller="Account" asp-action="ManageAIRegistration" method="post">
                             <input type="hidden" name="choice" value="true"/>
                             <button class="btn btn-success"><i class="bi bi-check-lg"></i> Enable AI Features</button>

@@ -165,6 +165,7 @@ public class BookController : Controller
             {
                 BookId = result.Id,
                 Book = result,
+                IsGenerated = false
             };
             
             result.AISummary = aiSummary;

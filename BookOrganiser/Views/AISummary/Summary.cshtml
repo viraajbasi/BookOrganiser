@@ -4,6 +4,10 @@
 @{
     ViewData["Title"] = "Details";
     var summary = Model.Summary;
+    var isGenerating = !summary.IsGenerated &&
+                       (summary.Summary == string.Empty ||
+                        summary.KeyQuotes == string.Empty ||
+                        summary.KeyThemes == string.Empty);
 }
 
 <!DOCTYPE html>
@@ -23,7 +27,26 @@
             <div>
                 <h1>AI Summary</h1>
                 <hr/>
-                @if (Model.AcceptedAIFeatures)
+                @if (!Model.AcceptedAIFeatures)
+                {
+                    <div class="alert alert-warning">
+                        To enable AI features, you must read the disclaimer and opt-in first.
+                    </div>
+                }
+                else if (isGenerating)
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-arrow-counterclockwise"></i> Your AI summary is being generated. This process might take a few minutes.
+                        Please check back later or refresh this page.
+                    </div>
+                    
+                    <script>
+                        setTimeout(function (){
+                            window.location.reload();
+                        }, 30000);
+                    </script>
+                }
+                else
                 {
                     <dl class="row">
                         <dt>Summary</dt>
@@ -33,12 +56,6 @@
                         <dt>Key Themes</dt>
                         <dd>@Html.Raw(summary.KeyThemes)</dd>
                     </dl>
-                }
-                else
-                {
-                    <div class="alert alert-warning">
-                        To enable AI features, you must read the disclaimer and opt-in first.
-                    </div>
                 }
             </div>
         </div>

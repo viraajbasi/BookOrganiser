@@ -40,6 +40,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
 });
 
+builder.Services.AddHostedService<AISummaryBackgroundService>();
+
+builder.Services.AddScoped<IAIService, OllamaService>();
+    
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

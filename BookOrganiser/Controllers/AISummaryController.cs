@@ -42,15 +42,6 @@ public class AISummaryController : Controller
             return RedirectToAction("Error", "Home", new { message = "An unknown error has occurred", statusCode = 404 });
         }
 
-        if (summary.Summary == string.Empty || summary.KeyQuotes == string.Empty || summary.Summary == string.Empty)
-        {
-            summary.Summary = await _aiService.GenerateBookSummaryAsync(summary.Book);
-            summary.KeyQuotes = await _aiService.GenerateKeyQuotesAsync(summary.Book);
-            summary.KeyThemes = await _aiService.GenerateKeyThemesAsync(summary.Book);
-            
-            await _context.SaveChangesAsync();
-        }
-
         var viewModel = new SummaryViewModel
         {
             Summary = summary,

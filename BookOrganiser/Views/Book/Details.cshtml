@@ -141,20 +141,22 @@
                         @textInfo.ToTitleCase(string.Join(", ", book.CustomCategories))
                     </dd>
                 }
-                @{ var thumbnail = (book.Thumbnail != string.Empty) ? book.Thumbnail : book.SmallThumbnail; }
-                <dt class="col-sm-2">
-                    Thumbnail
-                </dt>
-                <dd class="col-sm-10">
-                    @if (thumbnail != string.Empty)
-                    {
-                        <img src="@thumbnail" alt="Thumbnail for @book.Title."/>
-                    }
-                    else
-                    {
-                        <img src="~/images/no-cover.jpg" alt="No thumbnail available for @book.Title." width="130" height="170"/>
-                    }
-                </dd>
+                @{
+                    var thumbnail = (book.Thumbnail != string.Empty) ? book.Thumbnail : book.SmallThumbnail; 
+                    <dt class="col-sm-2">
+                        Thumbnail
+                    </dt> 
+                    <dd class="col-sm-10">
+                        @if (thumbnail != string.Empty)
+                        {
+                            <img src="@thumbnail" alt="Thumbnail for @book.Title."/>
+                        }
+                        else
+                        {
+                            <img src="~/images/no-cover.jpg" alt="No thumbnail available for @book.Title." width="130" height="170"/>
+                        }
+                    </dd>
+                }
             </dl>
             <div class="d-flex justify-content-between flex-wrap">
                 <div class="d-flex flex-column">

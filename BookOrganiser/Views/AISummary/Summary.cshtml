@@ -30,14 +30,14 @@
                 @if (!Model.AcceptedAIFeatures)
                 {
                     <div class="alert alert-warning">
-                        To enable AI features, you must read the disclaimer and opt-in first.
+                        Click <a asp-controller="Account" asp-action="AIFeatures">here</a> to opt-in to AI features.
                     </div>
                 }
                 else if (isGenerating)
                 {
                     <div class="alert alert-info">
                         <i class="bi bi-arrow-counterclockwise"></i> Your AI summary is being generated. This process might take a few minutes.
-                        Please check back later or refresh this page.
+                        Please check back later.
                     </div>
                 }
                 else

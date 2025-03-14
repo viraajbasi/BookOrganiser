@@ -7,7 +7,8 @@
     ViewData["Title"] = "Index";
     var textInfo = new CultureInfo("en-GB", false).TextInfo;
     var books = Model.Books;
-    
+    var unsortedBooks = books.Where(e => e.CustomCategories.Count == 0).ToList();
+    var emptyCategories = new List<string>();
 }
 
 <!DOCTYPE html>
@@ -32,9 +33,9 @@
         <strong>You currently don't have any books in your library!</strong> Click <a asp-controller="Book" asp-action="FindBooksTitle">here</a> to get started (or alternatively click "Add Book").
     </div>
 }
-@{
-    var emptyCategories = new List<string>();
-    @foreach (var category in Model.Categories)
+else
+{
+    foreach (var category in Model.Categories)
     {
         var filteredBooks = books.Where(e => e.CustomCategories.Contains(category)).ToList();
         if (!filteredBooks.Any())
@@ -71,7 +72,7 @@
         </div>
     }
     
-    @if (emptyCategories.Any())
+    if (emptyCategories.Count > 0)
     {
         foreach (var category in emptyCategories)
         {
@@ -81,14 +82,13 @@
             </div>
         }
     }
-}
-@{
-    if (Model.HasAnyBooks)
+
+    if (unsortedBooks.Count > 0)
     {
         <h2>Unsorted Books</h2>
         <div class="bookshelf-container">
             <div class="bookshelf-item-list">
-                @foreach (var item in books.Where(e => !e.CustomCategories.Any()))
+                @foreach (var item in unsortedBooks)
                 {
                     var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail;
                     <div class="bookshelf-item">
@@ -112,6 +112,33 @@
             </div>
         </div>
     }
+    
+    <h2>All Books</h2>
+    <div class="bookshelf-container">
+        <div class="bookshelf-item-list">
+            @foreach (var item in books)
+            {
+                var thumbnail = (item.Thumbnail != string.Empty) ? item.Thumbnail : item.SmallThumbnail;
+                <div class="bookshelf-item">
+                    <div class="bookshelf-thumbnail">
+                        @if (thumbnail != string.Empty)
+                        {
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                <img src="@thumbnail" alt="Thumbnail for @item.Title." title="@item.Title"/>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.Id">
+                                <img src="~/images/no-cover.jpg" alt="No Thumbnail for @item.Title." width="130" height="170" title="@item.Title"/>
+                            </a>
+                        }
+                    </div>
+                    <div class="bookshelf-title">@item.Title</div>
+                </div>
+            }
+        </div>
+    </div>
 }
 </body>
 </html>

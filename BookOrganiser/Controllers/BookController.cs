@@ -170,7 +170,7 @@ public class BookController : Controller
             return RedirectToAction("FindBooksTitle", "Book");
         }
         
-        var result = await _booksService.GetBookByUpstreamId(id, user);
+        var result = await _booksService.GetBookByUpstreamIdAsync(id, user);
         
         if (result != null && ModelState.IsValid)
         {

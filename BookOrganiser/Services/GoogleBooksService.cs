@@ -15,7 +15,7 @@ public class GoogleBooksService : IBooksService
         _booksService = new BooksService(new BaseClientService.Initializer());
     }
 
-    public async Task<Book?> GetBookByUpstreamId(string id, UserAccount user)
+    public async Task<Book?> GetBookByUpstreamIdAsync(string id, UserAccount user)
     {
         var request = _booksService.Volumes.Get($"{id}");
         request.Fields = "id,volumeInfo(title,subtitle,authors,publisher,publishedDate,description,industryIdentifiers,pageCount,categories,imageLinks,previewLink)";

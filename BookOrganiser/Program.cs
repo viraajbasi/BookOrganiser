@@ -13,12 +13,12 @@ builder.Services.AddControllersWithViews();
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));   
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));   
 }
 else
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection")));
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
 builder.Services.AddIdentity<UserAccount, IdentityRole>(options => 

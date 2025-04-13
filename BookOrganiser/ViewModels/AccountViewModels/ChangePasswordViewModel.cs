@@ -15,7 +15,7 @@ public class ChangePasswordViewModel
 
     [Required(ErrorMessage = "A password is required.")]
     [StringLength(40, MinimumLength = 8,
-        ErrorMessage = "The {0} must be at least {2} and at most {0} characters long.")]
+        ErrorMessage = "The password must be between 8 and 40 characters long.")]
     [DataType(DataType.Password)]
     [Compare("ConfirmNewPassword", ErrorMessage = "Passwords don't match.")]
     [Display(Name = "New Password")]

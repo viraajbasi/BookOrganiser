@@ -9,7 +9,7 @@ public class ForgotPasswordViewModel
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "A password is required.")]
-    [StringLength(40, MinimumLength = 8, ErrorMessage = "The password must be at least 8 characters long.")]
+    [StringLength(40, MinimumLength = 8, ErrorMessage = "The password must be between 8 and 40 characters long.")]
     [DataType(DataType.Password)]
     [Compare("ConfirmNewPassword", ErrorMessage = "Passwords don't match.")]
     [Display(Name = "New Password")]

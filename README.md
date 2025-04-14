@@ -23,7 +23,7 @@ BookOrganiser is an ASP.NET MVC 9.0 web application for managing, searching, and
     ```
 3. Configure PostgreSQL connection **(for production builds only)**.
 
-    Before running in production or applying migrations, set the `PostgreSqlConnection` string in `appsettings.Production.json`.
+    Before running in production or applying migrations, set the `DefaultConnection` string in `appsettings.Production.json`.
     ```json
     "ConnectionStrings": {
     "DefaultConnection": "Host=localhost;Port=5432;Database=YOUR_DATABASE_NAME;Username=YOUR_USERNAME;Password=YOUR_PASSWORD"
